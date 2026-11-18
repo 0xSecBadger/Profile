@@ -1,0 +1,54 @@
+{
+  "pdf_pages": 6,
+  "languages": [
+    "EN",
+    "FR",
+    "DE"
+  ],
+  "html_cases": 28,
+  "summary": {
+    "total": 28,
+    "PASS": 9,
+    "FAIL": 7,
+    "INCONCLUSIVE": 12
+  },
+  "unit_test_methods": 32,
+  "independent_audit_assertions": 163,
+  "embedded_report_matches": true,
+  "external_html_resources": [],
+  "raw_observations_embedded": 28,
+  "complete_model_request_response_records_embedded": 56,
+  "model_comparison_columns": [
+    "model",
+    "agreement",
+    "false_PASS",
+    "FAIL_to_PASS",
+    "invalid_JSON"
+  ],
+  "model_comparison": [
+    [
+      "qwen3:1.7b",
+      "9/28",
+      "19",
+      "7/7",
+      "0"
+    ],
+    [
+      "qwen3:4b",
+      "10/28",
+      "7",
+      "3/7",
+      "7"
+    ]
+  ],
+  "source_and_evaluation_hashes_checked_by_generator": true,
+  "report_sha256": "fc169ff2afcdf4d6b571030e7263f4e992fd300e834b5213f3cfb18710291103",
+  "output_sha256": {
+    "output/pdf/api_retest_evidence_en_fr_de.pdf": "168704ed98a01fda0f48be744c2475fed64e99b05cf7f211e5e7fb868b7cc316",
+    "output/retest_evidence.html": "41a3ce07ddc832d39804abf61f10b1418b914c3eeb19eba78e84cbf5c382b6ce"
+  },
+  "visual_review": "Latest six pages rendered with pdftoppm at 1500px and visually inspected; no clipping, overlap or unreadable glyphs observed.",
+  "html_browser_review": false,
+  "html_static_checks_passed": true,
+  "private_absolute_username_path_absent": true
+}

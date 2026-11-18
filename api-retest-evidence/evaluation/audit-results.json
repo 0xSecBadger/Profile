@@ -1,0 +1,34 @@
+{
+  "audited_at_utc": "2026-11-18T18:03:38.986728+00:00",
+  "offline_only": true,
+  "runs": [
+    {
+      "run": "qwen3_1_7b",
+      "records": 28,
+      "checks_passed": true,
+      "raw_sha256": "d6ee5ef79ac70a47827d8c5cb9f2f2520686f477be2c3e436f5cdbfab3b554dd",
+      "metadata_file": "metadata.public.json",
+      "metadata_sha256": "65b3cb755febcb13e697aff2af975954cf52f5107ea62a408a792e9c84cbfdfe",
+      "summary_sha256": "4452440607982e4ec944a267905fec69696c0ce066251545c967e4a0a0f84987"
+    },
+    {
+      "run": "qwen3_4b",
+      "records": 28,
+      "checks_passed": true,
+      "raw_sha256": "406395e721b2149bc1b9552e9ac0908ba09f97b9d6d0836592c1aa31ce839d6e",
+      "metadata_file": "metadata.public.json",
+      "metadata_sha256": "2e2dd2a71dfe73e0a27ca4856381cd41bf7e0e2357313ee46379bf87791377f0",
+      "summary_sha256": "52e12637db82bb5cd40d3662e620ec9f0918bcdcbeb7ac7ff03d7797ded012ff"
+    }
+  ],
+  "checks": [
+    "28 records in original order",
+    "fresh oracle matches logged gold",
+    "engine sources and corpus hashes unchanged",
+    "script and prompt hashes match",
+    "observation metadata absent and scenario IDs pseudonymized",
+    "identical prompt per scenario across models",
+    "raw JSON parses to recorded prediction",
+    "diagnostic labels and all metrics recalculate exactly"
+  ]
+}

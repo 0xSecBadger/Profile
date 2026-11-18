@@ -1,0 +1,212 @@
+{
+  "total": 28,
+  "correct": 10,
+  "accuracy": 0.35714285714285715,
+  "balanced_accuracy": 0.34523809523809523,
+  "macro_f1": 0.4052631578947368,
+  "confusion_matrix_gold_rows_prediction_columns": {
+    "PASS": {
+      "PASS": 3,
+      "FAIL": 0,
+      "INCONCLUSIVE": 3,
+      "MALFORMED": 3,
+      "REQUEST_ERROR": 0
+    },
+    "FAIL": {
+      "PASS": 3,
+      "FAIL": 2,
+      "INCONCLUSIVE": 0,
+      "MALFORMED": 2,
+      "REQUEST_ERROR": 0
+    },
+    "INCONCLUSIVE": {
+      "PASS": 4,
+      "FAIL": 1,
+      "INCONCLUSIVE": 5,
+      "MALFORMED": 2,
+      "REQUEST_ERROR": 0
+    }
+  },
+  "per_label": {
+    "PASS": {
+      "precision": 0.3,
+      "recall": 0.3333333333333333,
+      "f1": 0.3157894736842105,
+      "support": 9
+    },
+    "FAIL": {
+      "precision": 0.6666666666666666,
+      "recall": 0.2857142857142857,
+      "f1": 0.4,
+      "support": 7
+    },
+    "INCONCLUSIVE": {
+      "precision": 0.625,
+      "recall": 0.4166666666666667,
+      "f1": 0.5,
+      "support": 12
+    }
+  },
+  "false_pass_count": 7,
+  "false_pass_scenario_ids": [
+    "S04",
+    "S07",
+    "S09",
+    "S18",
+    "S19",
+    "S23",
+    "S26"
+  ],
+  "false_pass_definition": "Model PASS when oracle FAIL or INCONCLUSIVE.",
+  "dangerous_false_pass_on_fail_count": 3,
+  "dangerous_false_pass_on_fail_ids": [
+    "S04",
+    "S18",
+    "S19"
+  ],
+  "malformed_count": 7,
+  "request_error_count": 0,
+  "diagnostic_correct_out_of_total": {
+    "scope": 20,
+    "request": 17,
+    "timing": 11,
+    "revocation": 9,
+    "mutation": 16,
+    "missing": 11
+  },
+  "diagnostic_confusion_matrices": {
+    "scope": {
+      "MATCH": {
+        "MATCH": 19,
+        "MISMATCH": 0,
+        "UNKNOWN": 0,
+        "MALFORMED": 7,
+        "REQUEST_ERROR": 0
+      },
+      "MISMATCH": {
+        "MATCH": 0,
+        "MISMATCH": 1,
+        "UNKNOWN": 0,
+        "MALFORMED": 0,
+        "REQUEST_ERROR": 0
+      },
+      "UNKNOWN": {
+        "MATCH": 1,
+        "MISMATCH": 0,
+        "UNKNOWN": 0,
+        "MALFORMED": 0,
+        "REQUEST_ERROR": 0
+      }
+    },
+    "request": {
+      "MATCH": {
+        "MATCH": 16,
+        "MISMATCH": 3,
+        "UNKNOWN": 0,
+        "MALFORMED": 7,
+        "REQUEST_ERROR": 0
+      },
+      "MISMATCH": {
+        "MATCH": 0,
+        "MISMATCH": 1,
+        "UNKNOWN": 0,
+        "MALFORMED": 0,
+        "REQUEST_ERROR": 0
+      },
+      "UNKNOWN": {
+        "MATCH": 0,
+        "MISMATCH": 1,
+        "UNKNOWN": 0,
+        "MALFORMED": 0,
+        "REQUEST_ERROR": 0
+      }
+    },
+    "timing": {
+      "VALID": {
+        "VALID": 10,
+        "INVALID": 7,
+        "UNKNOWN": 1,
+        "MALFORMED": 7,
+        "REQUEST_ERROR": 0
+      },
+      "INVALID": {
+        "VALID": 0,
+        "INVALID": 1,
+        "UNKNOWN": 0,
+        "MALFORMED": 0,
+        "REQUEST_ERROR": 0
+      },
+      "UNKNOWN": {
+        "VALID": 0,
+        "INVALID": 2,
+        "UNKNOWN": 0,
+        "MALFORMED": 0,
+        "REQUEST_ERROR": 0
+      }
+    },
+    "revocation": {
+      "EFFECTIVE": {
+        "EFFECTIVE": 1,
+        "NOT_EFFECTIVE": 11,
+        "UNKNOWN": 0,
+        "MALFORMED": 6,
+        "REQUEST_ERROR": 0
+      },
+      "NOT_EFFECTIVE": {
+        "EFFECTIVE": 0,
+        "NOT_EFFECTIVE": 8,
+        "UNKNOWN": 0,
+        "MALFORMED": 1,
+        "REQUEST_ERROR": 0
+      },
+      "UNKNOWN": {
+        "EFFECTIVE": 0,
+        "NOT_EFFECTIVE": 1,
+        "UNKNOWN": 0,
+        "MALFORMED": 0,
+        "REQUEST_ERROR": 0
+      }
+    },
+    "mutation": {
+      "SUBMISSION_EVIDENCED": {
+        "SUBMISSION_EVIDENCED": 5,
+        "NO_SUBMISSION_EVIDENCED": 2,
+        "MALFORMED": 1,
+        "REQUEST_ERROR": 0
+      },
+      "NO_SUBMISSION_EVIDENCED": {
+        "SUBMISSION_EVIDENCED": 3,
+        "NO_SUBMISSION_EVIDENCED": 11,
+        "MALFORMED": 6,
+        "REQUEST_ERROR": 0
+      }
+    },
+    "missing": {
+      "PRESENT": {
+        "PRESENT": 2,
+        "ABSENT": 0,
+        "MALFORMED": 0,
+        "REQUEST_ERROR": 0
+      },
+      "ABSENT": {
+        "PRESENT": 10,
+        "ABSENT": 9,
+        "MALFORMED": 7,
+        "REQUEST_ERROR": 0
+      }
+    }
+  },
+  "timing_seconds": {
+    "sum": 378.99024925199774,
+    "mean": 13.535366044714205,
+    "median": 11.022186104002685,
+    "min": 4.661871499996778,
+    "max": 24.48397775000194
+  },
+  "reason_text_scored": false,
+  "reason_text_note": "Free text is retained for inspection; no model judge or subjective numeric score.",
+  "model": "qwen3:4b",
+  "model_digest": "359d7dd4bcdab3d86b87d73ac27966f4dbb9f5efdfcc75d34a8764a09474fae7",
+  "finished_at_utc": "2026-11-18T18:02:52.420033+00:00",
+  "run_directory": "evaluation/qwen3_4b"
+}

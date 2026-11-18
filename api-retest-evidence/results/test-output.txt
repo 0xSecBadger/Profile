@@ -1,0 +1,37 @@
+test_assistant_claims_never_change_verdicts (test_retest.EvidenceTests.test_assistant_claims_never_change_verdicts) ... ok
+test_audit_outcome_must_agree_with_api_receipt_and_commit (test_retest.EvidenceTests.test_audit_outcome_must_agree_with_api_receipt_and_commit) ... ok
+test_audit_version_gap_is_not_success (test_retest.EvidenceTests.test_audit_version_gap_is_not_success) ... ok
+test_authority_observed_after_decision_is_inconclusive (test_retest.EvidenceTests.test_authority_observed_after_decision_is_inconclusive) ... ok
+test_contradictory_api_and_audit_never_pass (test_retest.EvidenceTests.test_contradictory_api_and_audit_never_pass) ... ok
+test_corpus_generation_is_deterministic (test_retest.EvidenceTests.test_corpus_generation_is_deterministic) ... ok
+test_corpus_regression_expectations (test_retest.EvidenceTests.test_corpus_regression_expectations) ... ok
+test_expired_audit_window_is_inconclusive (test_retest.EvidenceTests.test_expired_audit_window_is_inconclusive) ... ok
+test_false_403_does_not_hide_commit (test_retest.EvidenceTests.test_false_403_does_not_hide_commit) ... ok
+test_fixture_names_and_fault_labels_never_drive_verdict (test_retest.EvidenceTests.test_fixture_names_and_fault_labels_never_drive_verdict) ... ok
+test_invalid_snapshot_relationship_is_inconclusive (test_retest.EvidenceTests.test_invalid_snapshot_relationship_is_inconclusive) ... ok
+test_missing_required_evidence_never_passes (test_retest.EvidenceTests.test_missing_required_evidence_never_passes) ... ok
+test_mutated_current_request_without_journal_never_passes (test_retest.EvidenceTests.test_mutated_current_request_without_journal_never_passes) ... ok
+test_no_finality_or_coverage_means_no_pass (test_retest.EvidenceTests.test_no_finality_or_coverage_means_no_pass) ... ok
+test_noninteger_or_negative_logical_times_are_rejected (test_retest.EvidenceTests.test_noninteger_or_negative_logical_times_are_rejected) ... ok
+test_pending_does_not_hide_already_proven_forbidden_effect (test_retest.EvidenceTests.test_pending_does_not_hide_already_proven_forbidden_effect) ... ok
+test_post_snapshot_effect_within_final_audit_window_cannot_be_ignored (test_retest.EvidenceTests.test_post_snapshot_effect_within_final_audit_window_cannot_be_ignored) ... ok
+test_post_snapshot_nonmutation_makes_snapshot_nonfinal (test_retest.EvidenceTests.test_post_snapshot_nonmutation_makes_snapshot_nonfinal) ... ok
+test_replay_flag_and_receipt_are_required (test_retest.EvidenceTests.test_replay_flag_and_receipt_are_required) ... ok
+test_rollback_does_not_erase_authorization_failure (test_retest.EvidenceTests.test_rollback_does_not_erase_authorization_failure) ... ok
+test_scope_mismatches_cannot_be_borrowed_as_proof (test_retest.EvidenceTests.test_scope_mismatches_cannot_be_borrowed_as_proof) ... ok
+test_stale_or_other_request_events_cannot_prove_success (test_retest.EvidenceTests.test_stale_or_other_request_events_cannot_prove_success) ... ok
+test_truthy_strings_cannot_claim_complete_final_evidence (test_retest.EvidenceTests.test_truthy_strings_cannot_claim_complete_final_evidence) ... ok
+test_untrusted_audit_cannot_establish_happy_path (test_retest.EvidenceTests.test_untrusted_audit_cannot_establish_happy_path) ... ok
+test_authorization_precedes_idempotency_cache (test_retest.ServiceTests.test_authorization_precedes_idempotency_cache) ... ok
+test_authorized_submission_changes_state_once (test_retest.ServiceTests.test_authorized_submission_changes_state_once) ... ok
+test_every_scope_dimension_is_enforced_before_cache (test_retest.ServiceTests.test_every_scope_dimension_is_enforced_before_cache) ... ok
+test_new_key_for_submitted_expense_is_conflict (test_retest.ServiceTests.test_new_key_for_submitted_expense_is_conflict) ... ok
+test_other_action_cannot_reuse_receipt (test_retest.ServiceTests.test_other_action_cannot_reuse_receipt) ... ok
+test_replay_does_not_duplicate_business_operation (test_retest.ServiceTests.test_replay_does_not_duplicate_business_operation) ... ok
+test_revocation_is_effective_at_exact_decision_tick (test_retest.ServiceTests.test_revocation_is_effective_at_exact_decision_tick) ... ok
+test_scheduled_revocation_does_not_deny_earlier_decision (test_retest.ServiceTests.test_scheduled_revocation_does_not_deny_earlier_decision) ... ok
+
+----------------------------------------------------------------------
+Ran 32 tests in 0.014s
+
+OK

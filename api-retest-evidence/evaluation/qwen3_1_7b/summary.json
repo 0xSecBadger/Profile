@@ -1,0 +1,228 @@
+{
+  "total": 28,
+  "correct": 9,
+  "accuracy": 0.32142857142857145,
+  "balanced_accuracy": 0.3333333333333333,
+  "macro_f1": 0.16216216216216217,
+  "confusion_matrix_gold_rows_prediction_columns": {
+    "PASS": {
+      "PASS": 9,
+      "FAIL": 0,
+      "INCONCLUSIVE": 0,
+      "MALFORMED": 0,
+      "REQUEST_ERROR": 0
+    },
+    "FAIL": {
+      "PASS": 7,
+      "FAIL": 0,
+      "INCONCLUSIVE": 0,
+      "MALFORMED": 0,
+      "REQUEST_ERROR": 0
+    },
+    "INCONCLUSIVE": {
+      "PASS": 12,
+      "FAIL": 0,
+      "INCONCLUSIVE": 0,
+      "MALFORMED": 0,
+      "REQUEST_ERROR": 0
+    }
+  },
+  "per_label": {
+    "PASS": {
+      "precision": 0.32142857142857145,
+      "recall": 1.0,
+      "f1": 0.4864864864864865,
+      "support": 9
+    },
+    "FAIL": {
+      "precision": 0,
+      "recall": 0.0,
+      "f1": 0,
+      "support": 7
+    },
+    "INCONCLUSIVE": {
+      "precision": 0,
+      "recall": 0.0,
+      "f1": 0,
+      "support": 12
+    }
+  },
+  "false_pass_count": 19,
+  "false_pass_scenario_ids": [
+    "S04",
+    "S05",
+    "S06",
+    "S07",
+    "S09",
+    "S14",
+    "S15",
+    "S16",
+    "S17",
+    "S18",
+    "S19",
+    "S21",
+    "S22",
+    "S23",
+    "S24",
+    "S25",
+    "S26",
+    "S27",
+    "S28"
+  ],
+  "false_pass_definition": "Model PASS when oracle FAIL or INCONCLUSIVE.",
+  "dangerous_false_pass_on_fail_count": 7,
+  "dangerous_false_pass_on_fail_ids": [
+    "S04",
+    "S05",
+    "S14",
+    "S17",
+    "S18",
+    "S19",
+    "S27"
+  ],
+  "malformed_count": 0,
+  "request_error_count": 0,
+  "diagnostic_correct_out_of_total": {
+    "scope": 26,
+    "request": 26,
+    "timing": 25,
+    "revocation": 18,
+    "mutation": 8,
+    "missing": 26
+  },
+  "diagnostic_confusion_matrices": {
+    "scope": {
+      "MATCH": {
+        "MATCH": 26,
+        "MISMATCH": 0,
+        "UNKNOWN": 0,
+        "MALFORMED": 0,
+        "REQUEST_ERROR": 0
+      },
+      "MISMATCH": {
+        "MATCH": 1,
+        "MISMATCH": 0,
+        "UNKNOWN": 0,
+        "MALFORMED": 0,
+        "REQUEST_ERROR": 0
+      },
+      "UNKNOWN": {
+        "MATCH": 1,
+        "MISMATCH": 0,
+        "UNKNOWN": 0,
+        "MALFORMED": 0,
+        "REQUEST_ERROR": 0
+      }
+    },
+    "request": {
+      "MATCH": {
+        "MATCH": 26,
+        "MISMATCH": 0,
+        "UNKNOWN": 0,
+        "MALFORMED": 0,
+        "REQUEST_ERROR": 0
+      },
+      "MISMATCH": {
+        "MATCH": 1,
+        "MISMATCH": 0,
+        "UNKNOWN": 0,
+        "MALFORMED": 0,
+        "REQUEST_ERROR": 0
+      },
+      "UNKNOWN": {
+        "MATCH": 1,
+        "MISMATCH": 0,
+        "UNKNOWN": 0,
+        "MALFORMED": 0,
+        "REQUEST_ERROR": 0
+      }
+    },
+    "timing": {
+      "VALID": {
+        "VALID": 25,
+        "INVALID": 0,
+        "UNKNOWN": 0,
+        "MALFORMED": 0,
+        "REQUEST_ERROR": 0
+      },
+      "INVALID": {
+        "VALID": 1,
+        "INVALID": 0,
+        "UNKNOWN": 0,
+        "MALFORMED": 0,
+        "REQUEST_ERROR": 0
+      },
+      "UNKNOWN": {
+        "VALID": 2,
+        "INVALID": 0,
+        "UNKNOWN": 0,
+        "MALFORMED": 0,
+        "REQUEST_ERROR": 0
+      }
+    },
+    "revocation": {
+      "EFFECTIVE": {
+        "EFFECTIVE": 18,
+        "NOT_EFFECTIVE": 0,
+        "UNKNOWN": 0,
+        "MALFORMED": 0,
+        "REQUEST_ERROR": 0
+      },
+      "NOT_EFFECTIVE": {
+        "EFFECTIVE": 9,
+        "NOT_EFFECTIVE": 0,
+        "UNKNOWN": 0,
+        "MALFORMED": 0,
+        "REQUEST_ERROR": 0
+      },
+      "UNKNOWN": {
+        "EFFECTIVE": 1,
+        "NOT_EFFECTIVE": 0,
+        "UNKNOWN": 0,
+        "MALFORMED": 0,
+        "REQUEST_ERROR": 0
+      }
+    },
+    "mutation": {
+      "SUBMISSION_EVIDENCED": {
+        "SUBMISSION_EVIDENCED": 8,
+        "NO_SUBMISSION_EVIDENCED": 0,
+        "MALFORMED": 0,
+        "REQUEST_ERROR": 0
+      },
+      "NO_SUBMISSION_EVIDENCED": {
+        "SUBMISSION_EVIDENCED": 20,
+        "NO_SUBMISSION_EVIDENCED": 0,
+        "MALFORMED": 0,
+        "REQUEST_ERROR": 0
+      }
+    },
+    "missing": {
+      "PRESENT": {
+        "PRESENT": 0,
+        "ABSENT": 2,
+        "MALFORMED": 0,
+        "REQUEST_ERROR": 0
+      },
+      "ABSENT": {
+        "PRESENT": 0,
+        "ABSENT": 26,
+        "MALFORMED": 0,
+        "REQUEST_ERROR": 0
+      }
+    }
+  },
+  "timing_seconds": {
+    "sum": 85.7145295849914,
+    "mean": 3.0612331994639783,
+    "median": 2.99980822949874,
+    "min": 2.4515456660010386,
+    "max": 6.152109375001601
+  },
+  "reason_text_scored": false,
+  "reason_text_note": "Free text is retained for inspection; no model judge or subjective numeric score.",
+  "model": "qwen3:1.7b",
+  "model_digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
+  "finished_at_utc": "2026-11-18T17:56:20.314288+00:00",
+  "run_directory": "evaluation/qwen3_1_7b"
+}

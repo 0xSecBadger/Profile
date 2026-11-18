@@ -1,0 +1,2676 @@
+[
+  {
+    "scenario_id": "S01",
+    "title": "Authorized happy path",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S01",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S01"
+      },
+      "request_id": "request-S01-current",
+      "idempotency_key": "key-S01-new",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S01",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S01"
+      },
+      "revoked_at": null,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S01",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S01"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S01",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S01"
+      },
+      "status": "submitted",
+      "version": 1,
+      "submitted_request_id": "request-S01-current",
+      "observed_at": 102,
+      "source": "expense-store"
+    },
+    "api": {
+      "request_id": "request-S01-current",
+      "status": 201,
+      "completed_at": 101,
+      "terminal": true,
+      "replay": false,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S01",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S01"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S01",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S01"
+        },
+        "request_id": "request-S01-current",
+        "kind": "submitted",
+        "occurred_at": 101,
+        "version_before": 0,
+        "version_after": 1,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": null,
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "none"
+  },
+  {
+    "scenario_id": "S02",
+    "title": "Effective revocation prevents submission",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S02",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S02"
+      },
+      "request_id": "request-S02-current",
+      "idempotency_key": "key-S02-new",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S02",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S02"
+      },
+      "revoked_at": 80,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S02",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S02"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S02",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S02"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 102,
+      "source": "expense-store"
+    },
+    "api": {
+      "request_id": "request-S02-current",
+      "status": 403,
+      "completed_at": 101,
+      "terminal": true,
+      "replay": false,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S02",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S02"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S02",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S02"
+        },
+        "request_id": "request-S02-current",
+        "kind": "refused",
+        "occurred_at": 101,
+        "version_before": 0,
+        "version_after": 0,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": null,
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "none"
+  },
+  {
+    "scenario_id": "S03",
+    "title": "Assistant falsely claims success after a real refusal",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S03",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S03"
+      },
+      "request_id": "request-S03-current",
+      "idempotency_key": "key-S03-new",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S03",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S03"
+      },
+      "revoked_at": 80,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S03",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S03"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S03",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S03"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 102,
+      "source": "expense-store"
+    },
+    "api": {
+      "request_id": "request-S03-current",
+      "status": 403,
+      "completed_at": 101,
+      "terminal": true,
+      "replay": false,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S03",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S03"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S03",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S03"
+        },
+        "request_id": "request-S03-current",
+        "kind": "refused",
+        "occurred_at": 101,
+        "version_before": 0,
+        "version_after": 0,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": null,
+    "assistant_claim": "I submitted the expense successfully.",
+    "fault_model": "none"
+  },
+  {
+    "scenario_id": "S04",
+    "title": "Assistant claims refusal while the service submits",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S04",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S04"
+      },
+      "request_id": "request-S04-current",
+      "idempotency_key": "key-S04-new",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S04",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S04"
+      },
+      "revoked_at": 80,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S04",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S04"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S04",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S04"
+      },
+      "status": "submitted",
+      "version": 1,
+      "submitted_request_id": "request-S04-current",
+      "observed_at": 102,
+      "source": "expense-store"
+    },
+    "api": {
+      "request_id": "request-S04-current",
+      "status": 201,
+      "completed_at": 101,
+      "terminal": true,
+      "replay": false,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S04",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S04"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S04",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S04"
+        },
+        "request_id": "request-S04-current",
+        "kind": "submitted",
+        "occurred_at": 101,
+        "version_before": 0,
+        "version_after": 1,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": null,
+    "assistant_claim": "I refused and changed nothing.",
+    "fault_model": "ignore_revocation"
+  },
+  {
+    "scenario_id": "S05",
+    "title": "API returns 403 after an unauthorized commit",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S05",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S05"
+      },
+      "request_id": "request-S05-current",
+      "idempotency_key": "key-S05-new",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S05",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S05"
+      },
+      "revoked_at": 80,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S05",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S05"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S05",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S05"
+      },
+      "status": "submitted",
+      "version": 1,
+      "submitted_request_id": "request-S05-current",
+      "observed_at": 102,
+      "source": "expense-store"
+    },
+    "api": {
+      "request_id": "request-S05-current",
+      "status": 403,
+      "completed_at": 101,
+      "terminal": true,
+      "replay": false,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S05",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S05"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S05",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S05"
+        },
+        "request_id": "request-S05-current",
+        "kind": "submitted",
+        "occurred_at": 101,
+        "version_before": 0,
+        "version_after": 1,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": null,
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "mutate_then_403"
+  },
+  {
+    "scenario_id": "S06",
+    "title": "Missing final business snapshot",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S06",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S06"
+      },
+      "request_id": "request-S06-current",
+      "idempotency_key": "key-S06-new",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S06",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S06"
+      },
+      "revoked_at": 80,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S06",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S06"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": null,
+    "api": {
+      "request_id": "request-S06-current",
+      "status": 403,
+      "completed_at": 101,
+      "terminal": true,
+      "replay": false,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S06",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S06"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S06",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S06"
+        },
+        "request_id": "request-S06-current",
+        "kind": "refused",
+        "occurred_at": 101,
+        "version_before": 0,
+        "version_after": 0,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": null,
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "drop_after_snapshot"
+  },
+  {
+    "scenario_id": "S07",
+    "title": "Final snapshot contradicts successful audit transition",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S07",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S07"
+      },
+      "request_id": "request-S07-current",
+      "idempotency_key": "key-S07-new",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S07",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S07"
+      },
+      "revoked_at": null,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S07",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S07"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S07",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S07"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 102,
+      "source": "expense-store"
+    },
+    "api": {
+      "request_id": "request-S07-current",
+      "status": 201,
+      "completed_at": 101,
+      "terminal": true,
+      "replay": false,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S07",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S07"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S07",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S07"
+        },
+        "request_id": "request-S07-current",
+        "kind": "submitted",
+        "occurred_at": 101,
+        "version_before": 0,
+        "version_after": 1,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": null,
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "replace_final_snapshot_with_baseline"
+  },
+  {
+    "scenario_id": "S08",
+    "title": "Stale submission event cannot establish a current effect",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S08",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S08"
+      },
+      "request_id": "request-S08-current",
+      "idempotency_key": "key-S08-new",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S08",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S08"
+      },
+      "revoked_at": 80,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S08",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S08"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S08",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S08"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 102,
+      "source": "expense-store"
+    },
+    "api": {
+      "request_id": "request-S08-current",
+      "status": 403,
+      "completed_at": 101,
+      "terminal": true,
+      "replay": false,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S08",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S08"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S08",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S08"
+        },
+        "request_id": "request-S08-current",
+        "kind": "refused",
+        "occurred_at": 101,
+        "version_before": 0,
+        "version_after": 0,
+        "source": "expense-audit"
+      },
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S08",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S08"
+        },
+        "request_id": "request-S08-current",
+        "kind": "submitted",
+        "occurred_at": 50,
+        "version_before": 0,
+        "version_after": 1,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": null,
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "append_stale_event"
+  },
+  {
+    "scenario_id": "S09",
+    "title": "Another request's event cannot prove this request committed",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S09",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S09"
+      },
+      "request_id": "request-S09-current",
+      "idempotency_key": "key-S09-new",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S09",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S09"
+      },
+      "revoked_at": null,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S09",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S09"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S09",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S09"
+      },
+      "status": "submitted",
+      "version": 1,
+      "submitted_request_id": "request-S09-current",
+      "observed_at": 102,
+      "source": "expense-store"
+    },
+    "api": {
+      "request_id": "request-S09-current",
+      "status": 201,
+      "completed_at": 101,
+      "terminal": true,
+      "replay": false,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S09",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S09"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S09",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S09"
+        },
+        "request_id": "request-unrelated",
+        "kind": "submitted",
+        "occurred_at": 101,
+        "version_before": 0,
+        "version_after": 1,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": null,
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "replace_audit_request_id"
+  },
+  {
+    "scenario_id": "S10",
+    "title": "Other-tenant event is excluded from this attempt",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S10",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S10"
+      },
+      "request_id": "request-S10-current",
+      "idempotency_key": "key-S10-new",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S10",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S10"
+      },
+      "revoked_at": 80,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S10",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S10"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S10",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S10"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 102,
+      "source": "expense-store"
+    },
+    "api": {
+      "request_id": "request-S10-current",
+      "status": 403,
+      "completed_at": 101,
+      "terminal": true,
+      "replay": false,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S10",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S10"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S10",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S10"
+        },
+        "request_id": "request-S10-current",
+        "kind": "refused",
+        "occurred_at": 101,
+        "version_before": 0,
+        "version_after": 0,
+        "source": "expense-audit"
+      },
+      {
+        "scope": {
+          "tenant_id": "tenant-other",
+          "expense_id": "expense-S10",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S10"
+        },
+        "request_id": "request-S10-current",
+        "kind": "submitted",
+        "occurred_at": 101,
+        "version_before": 0,
+        "version_after": 1,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": null,
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "append_other_tenant_event"
+  },
+  {
+    "scenario_id": "S11",
+    "title": "Existing submission is preserved after revocation",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S11",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S11"
+      },
+      "request_id": "request-S11-current",
+      "idempotency_key": "key-S11-new",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S11",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S11"
+      },
+      "revoked_at": 80,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S11",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S11"
+      },
+      "status": "submitted",
+      "version": 1,
+      "submitted_request_id": "request-S11-original",
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S11",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S11"
+      },
+      "status": "submitted",
+      "version": 1,
+      "submitted_request_id": "request-S11-original",
+      "observed_at": 102,
+      "source": "expense-store"
+    },
+    "api": {
+      "request_id": "request-S11-current",
+      "status": 403,
+      "completed_at": 101,
+      "terminal": true,
+      "replay": false,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S11",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S11"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S11",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S11"
+        },
+        "request_id": "request-S11-current",
+        "kind": "refused",
+        "occurred_at": 101,
+        "version_before": 1,
+        "version_after": 1,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": null,
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "none"
+  },
+  {
+    "scenario_id": "S12",
+    "title": "Authorized idempotent replay preserves state and version",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S12",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S12"
+      },
+      "request_id": "request-S12-current",
+      "idempotency_key": "key-S12",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S12",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S12"
+      },
+      "revoked_at": null,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S12",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S12"
+      },
+      "status": "submitted",
+      "version": 1,
+      "submitted_request_id": "request-S12-original",
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S12",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S12"
+      },
+      "status": "submitted",
+      "version": 1,
+      "submitted_request_id": "request-S12-original",
+      "observed_at": 102,
+      "source": "expense-store"
+    },
+    "api": {
+      "request_id": "request-S12-current",
+      "status": 200,
+      "completed_at": 101,
+      "terminal": true,
+      "replay": true,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S12",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S12"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S12",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S12"
+        },
+        "request_id": "request-S12-current",
+        "kind": "replayed",
+        "occurred_at": 101,
+        "version_before": 1,
+        "version_after": 1,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S12",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S12"
+      },
+      "idempotency_key": "key-S12",
+      "original_request_id": "request-S12-original",
+      "action": "submit_expense",
+      "expense_version": 1,
+      "source": "idempotency-store"
+    },
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "none"
+  },
+  {
+    "scenario_id": "S13",
+    "title": "Revocation blocks replay of a formerly successful key",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S13",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S13"
+      },
+      "request_id": "request-S13-current",
+      "idempotency_key": "key-S13",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S13",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S13"
+      },
+      "revoked_at": 80,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S13",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S13"
+      },
+      "status": "submitted",
+      "version": 1,
+      "submitted_request_id": "request-S13-original",
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S13",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S13"
+      },
+      "status": "submitted",
+      "version": 1,
+      "submitted_request_id": "request-S13-original",
+      "observed_at": 102,
+      "source": "expense-store"
+    },
+    "api": {
+      "request_id": "request-S13-current",
+      "status": 403,
+      "completed_at": 101,
+      "terminal": true,
+      "replay": false,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S13",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S13"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S13",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S13"
+        },
+        "request_id": "request-S13-current",
+        "kind": "refused",
+        "occurred_at": 101,
+        "version_before": 1,
+        "version_after": 1,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S13",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S13"
+      },
+      "idempotency_key": "key-S13",
+      "original_request_id": "request-S13-original",
+      "action": "submit_expense",
+      "expense_version": 1,
+      "source": "idempotency-store"
+    },
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "none"
+  },
+  {
+    "scenario_id": "S14",
+    "title": "Cache-before-authorization incorrectly returns prior success",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S14",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S14"
+      },
+      "request_id": "request-S14-current",
+      "idempotency_key": "key-S14",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S14",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S14"
+      },
+      "revoked_at": 80,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S14",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S14"
+      },
+      "status": "submitted",
+      "version": 1,
+      "submitted_request_id": "request-S14-original",
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S14",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S14"
+      },
+      "status": "submitted",
+      "version": 1,
+      "submitted_request_id": "request-S14-original",
+      "observed_at": 102,
+      "source": "expense-store"
+    },
+    "api": {
+      "request_id": "request-S14-current",
+      "status": 200,
+      "completed_at": 101,
+      "terminal": true,
+      "replay": true,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S14",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S14"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S14",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S14"
+        },
+        "request_id": "request-S14-current",
+        "kind": "replayed",
+        "occurred_at": 101,
+        "version_before": 1,
+        "version_after": 1,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S14",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S14"
+      },
+      "idempotency_key": "key-S14",
+      "original_request_id": "request-S14-original",
+      "action": "submit_expense",
+      "expense_version": 1,
+      "source": "idempotency-store"
+    },
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "cache_before_authorization"
+  },
+  {
+    "scenario_id": "S15",
+    "title": "Asynchronous request has no terminal outcome",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S15",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S15"
+      },
+      "request_id": "request-S15-current",
+      "idempotency_key": "key-S15-new",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S15",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S15"
+      },
+      "revoked_at": 80,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S15",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S15"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S15",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S15"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 102,
+      "source": "expense-store"
+    },
+    "api": {
+      "request_id": "request-S15-current",
+      "status": 202,
+      "completed_at": 101,
+      "terminal": false,
+      "replay": false,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S15",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S15"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": false,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S15",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S15"
+        },
+        "request_id": "request-S15-current",
+        "kind": "queued",
+        "occurred_at": 101,
+        "version_before": 0,
+        "version_after": 0,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": null,
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "pending"
+  },
+  {
+    "scenario_id": "S16",
+    "title": "Incomplete audit cannot prove absence of mutation",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S16",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S16"
+      },
+      "request_id": "request-S16-current",
+      "idempotency_key": "key-S16-new",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S16",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S16"
+      },
+      "revoked_at": 80,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S16",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S16"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S16",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S16"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 102,
+      "source": "expense-store"
+    },
+    "api": {
+      "request_id": "request-S16-current",
+      "status": 403,
+      "completed_at": 101,
+      "terminal": true,
+      "replay": false,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S16",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S16"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": false,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S16",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S16"
+        },
+        "request_id": "request-S16-current",
+        "kind": "refused",
+        "occurred_at": 101,
+        "version_before": 0,
+        "version_after": 0,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": null,
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "truncate_audit_coverage"
+  },
+  {
+    "scenario_id": "S17",
+    "title": "Unauthorized submission is followed by rollback",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S17",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S17"
+      },
+      "request_id": "request-S17-current",
+      "idempotency_key": "key-S17-new",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S17",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S17"
+      },
+      "revoked_at": 80,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S17",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S17"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S17",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S17"
+      },
+      "status": "draft",
+      "version": 2,
+      "submitted_request_id": null,
+      "observed_at": 102,
+      "source": "expense-store"
+    },
+    "api": {
+      "request_id": "request-S17-current",
+      "status": 403,
+      "completed_at": 101,
+      "terminal": true,
+      "replay": false,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S17",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S17"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S17",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S17"
+        },
+        "request_id": "request-S17-current",
+        "kind": "submitted",
+        "occurred_at": 101,
+        "version_before": 0,
+        "version_after": 1,
+        "source": "expense-audit"
+      },
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S17",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S17"
+        },
+        "request_id": "request-S17-current",
+        "kind": "rolled_back",
+        "occurred_at": 101,
+        "version_before": 1,
+        "version_after": 2,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": null,
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "mutate_then_rollback"
+  },
+  {
+    "scenario_id": "S18",
+    "title": "Authorized happy path regresses to refusal",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S18",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S18"
+      },
+      "request_id": "request-S18-current",
+      "idempotency_key": "key-S18-new",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S18",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S18"
+      },
+      "revoked_at": null,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S18",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S18"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S18",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S18"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 102,
+      "source": "expense-store"
+    },
+    "api": {
+      "request_id": "request-S18-current",
+      "status": 403,
+      "completed_at": 101,
+      "terminal": true,
+      "replay": false,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S18",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S18"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S18",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S18"
+        },
+        "request_id": "request-S18-current",
+        "kind": "refused",
+        "occurred_at": 101,
+        "version_before": 0,
+        "version_after": 0,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": null,
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "false_refusal"
+  },
+  {
+    "scenario_id": "S19",
+    "title": "Success response has no business commit",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S19",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S19"
+      },
+      "request_id": "request-S19-current",
+      "idempotency_key": "key-S19-new",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S19",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S19"
+      },
+      "revoked_at": null,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S19",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S19"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S19",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S19"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 102,
+      "source": "expense-store"
+    },
+    "api": {
+      "request_id": "request-S19-current",
+      "status": 201,
+      "completed_at": 101,
+      "terminal": true,
+      "replay": false,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S19",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S19"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [],
+    "receipt_before": null,
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "success_without_commit"
+  },
+  {
+    "scenario_id": "S20",
+    "title": "Already submitted expense rejects a new key",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S20",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S20"
+      },
+      "request_id": "request-S20-current",
+      "idempotency_key": "key-S20-new",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S20",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S20"
+      },
+      "revoked_at": null,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S20",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S20"
+      },
+      "status": "submitted",
+      "version": 1,
+      "submitted_request_id": "request-S20-original",
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S20",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S20"
+      },
+      "status": "submitted",
+      "version": 1,
+      "submitted_request_id": "request-S20-original",
+      "observed_at": 102,
+      "source": "expense-store"
+    },
+    "api": {
+      "request_id": "request-S20-current",
+      "status": 409,
+      "completed_at": 101,
+      "terminal": true,
+      "replay": false,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S20",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S20"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S20",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S20"
+        },
+        "request_id": "request-S20-current",
+        "kind": "conflict",
+        "occurred_at": 101,
+        "version_before": 1,
+        "version_after": 1,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": null,
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "none"
+  },
+  {
+    "scenario_id": "S21",
+    "title": "Authority evidence belongs to another grant",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S21",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S21"
+      },
+      "request_id": "request-S21-current",
+      "idempotency_key": "key-S21-new",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S21",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-other"
+      },
+      "revoked_at": 80,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S21",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S21"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S21",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S21"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 102,
+      "source": "expense-store"
+    },
+    "api": {
+      "request_id": "request-S21-current",
+      "status": 403,
+      "completed_at": 101,
+      "terminal": true,
+      "replay": false,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S21",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S21"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S21",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S21"
+        },
+        "request_id": "request-S21-current",
+        "kind": "refused",
+        "occurred_at": 101,
+        "version_before": 0,
+        "version_after": 0,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": null,
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "replace_authority_scope"
+  },
+  {
+    "scenario_id": "S22",
+    "title": "API evidence belongs to another request",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S22",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S22"
+      },
+      "request_id": "request-S22-current",
+      "idempotency_key": "key-S22-new",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S22",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S22"
+      },
+      "revoked_at": 80,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S22",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S22"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S22",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S22"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 102,
+      "source": "expense-store"
+    },
+    "api": {
+      "request_id": "request-other",
+      "status": 403,
+      "completed_at": 101,
+      "terminal": true,
+      "replay": false,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S22",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S22"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S22",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S22"
+        },
+        "request_id": "request-S22-current",
+        "kind": "refused",
+        "occurred_at": 101,
+        "version_before": 0,
+        "version_after": 0,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": null,
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "replace_api_request_id"
+  },
+  {
+    "scenario_id": "S23",
+    "title": "Prior receipt contradicts the initial submission",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S23",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S23"
+      },
+      "request_id": "request-S23-current",
+      "idempotency_key": "key-S23",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S23",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S23"
+      },
+      "revoked_at": null,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S23",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S23"
+      },
+      "status": "submitted",
+      "version": 1,
+      "submitted_request_id": "request-S23-original",
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S23",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S23"
+      },
+      "status": "submitted",
+      "version": 1,
+      "submitted_request_id": "request-S23-original",
+      "observed_at": 102,
+      "source": "expense-store"
+    },
+    "api": {
+      "request_id": "request-S23-current",
+      "status": 200,
+      "completed_at": 101,
+      "terminal": true,
+      "replay": true,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S23",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S23"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S23",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S23"
+        },
+        "request_id": "request-S23-current",
+        "kind": "replayed",
+        "occurred_at": 101,
+        "version_before": 1,
+        "version_after": 1,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S23",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S23"
+      },
+      "idempotency_key": "key-S23",
+      "original_request_id": "request-not-in-snapshot",
+      "action": "submit_expense",
+      "expense_version": 1,
+      "source": "idempotency-store"
+    },
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "replace_receipt_correlation"
+  },
+  {
+    "scenario_id": "S24",
+    "title": "Assistant-authored snapshot is not authoritative",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S24",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S24"
+      },
+      "request_id": "request-S24-current",
+      "idempotency_key": "key-S24-new",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S24",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S24"
+      },
+      "revoked_at": 80,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S24",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S24"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S24",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S24"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 102,
+      "source": "assistant-text"
+    },
+    "api": {
+      "request_id": "request-S24-current",
+      "status": 403,
+      "completed_at": 101,
+      "terminal": true,
+      "replay": false,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S24",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S24"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S24",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S24"
+        },
+        "request_id": "request-S24-current",
+        "kind": "refused",
+        "occurred_at": 101,
+        "version_before": 0,
+        "version_after": 0,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": null,
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "replace_snapshot_source"
+  },
+  {
+    "scenario_id": "S25",
+    "title": "A stale final snapshot does not bracket the attempt",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S25",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S25"
+      },
+      "request_id": "request-S25-current",
+      "idempotency_key": "key-S25-new",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S25",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S25"
+      },
+      "revoked_at": 80,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S25",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S25"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S25",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S25"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "api": {
+      "request_id": "request-S25-current",
+      "status": 403,
+      "completed_at": 101,
+      "terminal": true,
+      "replay": false,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S25",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S25"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S25",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S25"
+        },
+        "request_id": "request-S25-current",
+        "kind": "refused",
+        "occurred_at": 101,
+        "version_before": 0,
+        "version_after": 0,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": null,
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "stale_final_snapshot"
+  },
+  {
+    "scenario_id": "S26",
+    "title": "Duplicate submission audit creates a version contradiction",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S26",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S26"
+      },
+      "request_id": "request-S26-current",
+      "idempotency_key": "key-S26-new",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S26",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S26"
+      },
+      "revoked_at": null,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S26",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S26"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S26",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S26"
+      },
+      "status": "submitted",
+      "version": 1,
+      "submitted_request_id": "request-S26-current",
+      "observed_at": 102,
+      "source": "expense-store"
+    },
+    "api": {
+      "request_id": "request-S26-current",
+      "status": 201,
+      "completed_at": 101,
+      "terminal": true,
+      "replay": false,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S26",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S26"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S26",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S26"
+        },
+        "request_id": "request-S26-current",
+        "kind": "submitted",
+        "occurred_at": 101,
+        "version_before": 0,
+        "version_after": 1,
+        "source": "expense-audit"
+      },
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S26",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S26"
+        },
+        "request_id": "request-S26-current",
+        "kind": "submitted",
+        "occurred_at": 101,
+        "version_before": 0,
+        "version_after": 1,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": null,
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "duplicate_submission_event"
+  },
+  {
+    "scenario_id": "S27",
+    "title": "Pending response already has a proven unauthorized effect",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S27",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S27"
+      },
+      "request_id": "request-S27-current",
+      "idempotency_key": "key-S27-new",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S27",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S27"
+      },
+      "revoked_at": 80,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S27",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S27"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S27",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S27"
+      },
+      "status": "submitted",
+      "version": 1,
+      "submitted_request_id": "request-S27-current",
+      "observed_at": 102,
+      "source": "expense-store"
+    },
+    "api": {
+      "request_id": "request-S27-current",
+      "status": 202,
+      "completed_at": 101,
+      "terminal": false,
+      "replay": false,
+      "source": "api-gateway"
+    },
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S27",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S27"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": false,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S27",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S27"
+        },
+        "request_id": "request-S27-current",
+        "kind": "submitted",
+        "occurred_at": 101,
+        "version_before": 0,
+        "version_after": 1,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": null,
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "commit_then_pending"
+  },
+  {
+    "scenario_id": "S28",
+    "title": "Missing API evidence cannot pass a retest",
+    "command": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S28",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S28"
+      },
+      "request_id": "request-S28-current",
+      "idempotency_key": "key-S28-new",
+      "attempted_at": 100,
+      "action": "submit_expense"
+    },
+    "grant": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S28",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S28"
+      },
+      "revoked_at": 80,
+      "observed_at": 95,
+      "source": "authorization-store"
+    },
+    "before": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S28",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S28"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 90,
+      "source": "expense-store"
+    },
+    "after": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S28",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S28"
+      },
+      "status": "draft",
+      "version": 0,
+      "submitted_request_id": null,
+      "observed_at": 102,
+      "source": "expense-store"
+    },
+    "api": null,
+    "window": {
+      "scope": {
+        "tenant_id": "tenant-demo",
+        "expense_id": "expense-S28",
+        "delegate_id": "delegate-demo",
+        "grant_id": "grant-S28"
+      },
+      "start": 100,
+      "end": 102,
+      "complete": true,
+      "final": true,
+      "source": "expense-audit"
+    },
+    "events": [
+      {
+        "scope": {
+          "tenant_id": "tenant-demo",
+          "expense_id": "expense-S28",
+          "delegate_id": "delegate-demo",
+          "grant_id": "grant-S28"
+        },
+        "request_id": "request-S28-current",
+        "kind": "refused",
+        "occurred_at": 101,
+        "version_before": 0,
+        "version_after": 0,
+        "source": "expense-audit"
+      }
+    ],
+    "receipt_before": null,
+    "assistant_claim": "The API response is reported without an additional claim.",
+    "fault_model": "drop_api_evidence"
+  }
+]

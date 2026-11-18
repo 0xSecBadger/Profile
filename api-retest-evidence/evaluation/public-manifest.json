@@ -1,0 +1,21 @@
+{
+  "scope": "Evaluation-only reproducible public export; not the complete parent project.",
+  "redaction": "Only model_show.modelfile omitted from metadata; full requests and raw responses retained.",
+  "sha256": {
+    "evaluation/README.md": "0163c7fa2d1814bd1be4ead6e5f5f4d201acef475fbb34ab9ef5b0c5c1699db2",
+    "evaluation/audit.py": "29481574e7f2d3f43d515e0ac6388ea6ab592cfcb94b00f9b95ef0fb39f160b3",
+    "evaluation/evaluate.py": "1aabe6aa0adeb8c69563c3f0b5815c0a654713e80d293591cd555883d709dd62",
+    "evaluation/export_public.py": "892fc02e670330478d57ca49d87fdcfad6b150a4e37e36d7edbf927b4da4922e",
+    "evaluation/qwen3_1_7b/metadata.public.json": "65b3cb755febcb13e697aff2af975954cf52f5107ea62a408a792e9c84cbfdfe",
+    "evaluation/qwen3_1_7b/raw.jsonl": "d6ee5ef79ac70a47827d8c5cb9f2f2520686f477be2c3e436f5cdbfab3b554dd",
+    "evaluation/qwen3_1_7b/summary.json": "4452440607982e4ec944a267905fec69696c0ce066251545c967e4a0a0f84987",
+    "evaluation/qwen3_4b/metadata.public.json": "2e2dd2a71dfe73e0a27ca4856381cd41bf7e0e2357313ee46379bf87791377f0",
+    "evaluation/qwen3_4b/raw.jsonl": "406395e721b2149bc1b9552e9ac0908ba09f97b9d6d0836592c1aa31ce839d6e",
+    "evaluation/qwen3_4b/summary.json": "52e12637db82bb5cd40d3662e620ec9f0918bcdcbeb7ac7ff03d7797ded012ff",
+    "results/corpus.json": "c73115ce5e8b3c2e6751d9bbfb801e0fc359547cdbfd1dc48be38a75302c1e7a",
+    "results/report.json": "fc169ff2afcdf4d6b571030e7263f4e992fd300e834b5213f3cfb18710291103",
+    "src/retest_lab/__init__.py": "35f4b2a71fc2dd2565c9926d7c55a531c6a64a35663a0cdeda4f54dc73b0affd",
+    "src/retest_lab/model.py": "25f5d35749aff5514c348011862d5ceeceb8e4ada47a5714937e781a163dc861",
+    "src/retest_lab/verifier.py": "3c1482829dc61ac92c5939da6afb1b06bd5a60218c8cb708a5ee74fca30ccc17"
+  }
+}

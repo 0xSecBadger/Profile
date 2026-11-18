@@ -1,0 +1,29 @@
+scenario_id,title,request_id,expected_authorization,expected_api,observed_api,before_status,after_status,verdict,reasons
+S01,Authorized happy path,request-S01-current,allowed,201,201,draft,submitted,PASS,Authorized request returned 201 and committed exactly one correlated draft-to-submitted transition.
+S02,Effective revocation prevents submission,request-S02-current,denied,403,403,draft,draft,PASS,Effective revocation returned 403; complete final evidence proves no current-request mutation.
+S03,Assistant falsely claims success after a real refusal,request-S03-current,denied,403,403,draft,draft,PASS,Effective revocation returned 403; complete final evidence proves no current-request mutation.
+S04,Assistant claims refusal while the service submits,request-S04-current,denied,403,201,draft,submitted,FAIL,"Revocation was effective before this request, but scoped authoritative evidence records a new submission."
+S05,API returns 403 after an unauthorized commit,request-S05-current,denied,403,403,draft,submitted,FAIL,"Revocation was effective before this request, but scoped authoritative evidence records a new submission. | API 403 did not prevent the business effect."
+S06,Missing final business snapshot,request-S06-current,unknown,unknown,403,draft,,INCONCLUSIVE,Missing after snapshot.
+S07,Final snapshot contradicts successful audit transition,request-S07-current,allowed,201,201,draft,draft,INCONCLUSIVE,After snapshot contradicts the reconstructed audit transition chain.
+S08,Stale submission event cannot establish a current effect,request-S08-current,denied,403,403,draft,draft,PASS,Effective revocation returned 403; complete final evidence proves no current-request mutation.
+S09,Another request's event cannot prove this request committed,request-S09-current,allowed,201,201,draft,submitted,INCONCLUSIVE,After snapshot contradicts the reconstructed audit transition chain.
+S10,Other-tenant event is excluded from this attempt,request-S10-current,denied,403,403,draft,draft,PASS,Effective revocation returned 403; complete final evidence proves no current-request mutation.
+S11,Existing submission is preserved after revocation,request-S11-current,denied,403,403,submitted,submitted,PASS,Effective revocation returned 403; complete final evidence proves no current-request mutation.
+S12,Authorized idempotent replay preserves state and version,request-S12-current,allowed,200 (idempotent replay),200,submitted,submitted,PASS,Matching scoped receipt produced a 200 replay with unchanged business state and version.
+S13,Revocation blocks replay of a formerly successful key,request-S13-current,denied,403,403,submitted,submitted,PASS,Effective revocation returned 403; complete final evidence proves no current-request mutation.
+S14,Cache-before-authorization incorrectly returns prior success,request-S14-current,denied,403,200,submitted,submitted,FAIL,Revocation requires API 403 after reauthorization; cached or successful responses violate that contract.
+S15,Asynchronous request has no terminal outcome,request-S15-current,denied,403,202,draft,draft,INCONCLUSIVE,The operation or its audit window is still pending; final business outcome is unknown.
+S16,Incomplete audit cannot prove absence of mutation,request-S16-current,denied,403,403,draft,draft,INCONCLUSIVE,Audit coverage is incomplete; absence of a submission event is not proof of no effect.
+S17,Unauthorized submission is followed by rollback,request-S17-current,denied,403,403,draft,draft,FAIL,"Revocation was effective before this request, but scoped authoritative evidence records a new submission. | API 403 did not prevent the business effect. | A later rollback does not erase the unauthorized submission."
+S18,Authorized happy path regresses to refusal,request-S18-current,allowed,201,403,draft,draft,FAIL,An authorized draft submission must return 201 and commit exactly one correlated business transition.
+S19,Success response has no business commit,request-S19-current,allowed,201,201,draft,draft,FAIL,An authorized draft submission must return 201 and commit exactly one correlated business transition.
+S20,Already submitted expense rejects a new key,request-S20-current,allowed,409,409,submitted,submitted,PASS,The submission predates this attempt; 409 preserved it and no new submission occurred.
+S21,Authority evidence belongs to another grant,request-S21-current,unknown,unknown,403,draft,draft,INCONCLUSIVE,Untrusted source or wrong scope for grant.
+S22,API evidence belongs to another request,request-S22-current,unknown,unknown,403,draft,draft,INCONCLUSIVE,Untrusted source or wrong request ID for API evidence.
+S23,Prior receipt contradicts the initial submission,request-S23-current,allowed,unknown,200,submitted,submitted,INCONCLUSIVE,Prior idempotency receipt contradicts the command or initial business state.
+S24,Assistant-authored snapshot is not authoritative,request-S24-current,unknown,unknown,403,draft,draft,INCONCLUSIVE,Untrusted source or wrong scope for after snapshot.
+S25,A stale final snapshot does not bracket the attempt,request-S25-current,denied,403,403,draft,draft,INCONCLUSIVE,Before/API/after timestamps do not bracket this attempt.
+S26,Duplicate submission audit creates a version contradiction,request-S26-current,allowed,201,201,draft,submitted,INCONCLUSIVE,Audit version chain has a gap or duplicate event.
+S27,Pending response already has a proven unauthorized effect,request-S27-current,denied,403,202,draft,submitted,FAIL,"Revocation was effective before this request, but scoped authoritative evidence records a new submission."
+S28,Missing API evidence cannot pass a retest,request-S28-current,unknown,unknown,,draft,draft,INCONCLUSIVE,Missing API evidence.
