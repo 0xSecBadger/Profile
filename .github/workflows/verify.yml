@@ -1,0 +1,40 @@
+name: Verify AppSec evidence
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproducible-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: api-retest-evidence
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Deterministic verifier regressions
+        run: PYTHONPATH=src python -m unittest discover -s tests -v
+      - name: Independent evidence contract audit
+        run: PYTHONPATH=src python tests/audit_invariants.py
+      - name: Recalculate the recorded local-model evaluation
+        run: python evaluation/audit.py
+      - name: Real HTTP and SQLite regressions
+        working-directory: api-retest-evidence/http-retest
+        run: python -m unittest -v test_http.py
+      - name: Reproduce actual HTTP fixtures
+        working-directory: api-retest-evidence/http-retest
+        run: python run_demo.py --output ci-results
+      - name: Independent HTTP contract counter-tests
+        working-directory: api-retest-evidence/http-retest
+        run: python audit/independent_http_audit.py
