@@ -1,0 +1,3 @@
+# Generated reports retain their public evidence links; source remains browsable.
+api-retest-evidence/output/** linguist-generated=true linguist-documentation=true
+api-retest-evidence/assets/** linguist-generated=true linguist-documentation=true
