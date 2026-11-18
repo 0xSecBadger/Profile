@@ -32,7 +32,7 @@ The command regenerates only `independent-results.json` and `independent-test-ou
 - Twelve simultaneous submissions with one key and exactly one business effect.
 - A concurrent revocation versus twelve submissions, checking committed audit order for subsequent denials.
 - Graceful server restarts preserving the business effect, receipt and revoked permission.
-- SQLite failure injected while storing a receipt, proving rollback of the business state, request ledger, receipt and audit write.
+- SQLite failure injected while storing a receipt, proving rollback of the preceding business-state and request-ledger writes, with no receipt or audit event persisted.
 - Intentional vulnerable fixtures that commit despite `403` and replay a cached result after revocation.
 - Homonymous actors and identical request IDs in different tenants, retaining both authenticated and target tenant in the audit.
 - An incomplete HTTP body, receiving `408` after the configured idle timeout and preserving the business state.
