@@ -2,6 +2,8 @@
 
 **When an API says `403`, did the protected operation actually stay blocked?**
 
+> **HTTP extension:** [Run the HTTP + SQLite laboratory](http-retest/README.md), with real local requests, persisted state, concurrent submissions and independent counter-tests. The local SLM results below apply to the separate 28-case in-memory corpus.
+
 **Personal AppSec project · 18 November 2026 · Python · Local SLM evaluation.**
 
 A working, synthetic expense-submission service, a deterministic evidence verifier, and a controlled comparison of two locally executed Qwen3 models. Developed with AI coding assistance for this personal portfolio.

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-labelledby="title desc"><title id="title">403 ≠ RETEST PASS</title><desc id="desc">Correlate authorization, state and audit before closing a finding. Personal lab · synthetic data · AI-assisted · 18 Nov 2026</desc><rect width="1200" height="630" fill="#f6f9fa"/>
+<rect x="0" y="0" width="1200" height="9" rx="0" fill="#006c70"/>
+<text x="60" y="64.4" font-family="Arial,Helvetica,sans-serif" font-size="20" font-weight="700" fill="#006c70">API RETEST EVIDENCE</text>
+<text x="60" y="136.64" font-family="Arial,Helvetica,sans-serif" font-size="52" font-weight="700" fill="#152a35">403 ≠ RETEST PASS</text>
+<rect x="60" y="218" width="340" height="210" rx="14" fill="#ffffff" stroke="#cedbe0" stroke-width="2"/>
+<text x="84" y="256.76" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#536872">RESPONSE</text>
+<text x="84" y="316.52" font-family="Arial,Helvetica,sans-serif" font-size="36" font-weight="700" fill="#152a35">403</text>
+<text x="84" y="369.22" font-family="Arial,Helvetica,sans-serif" font-size="21" font-weight="400" fill="#536872">Authorization revoked.</text>
+<text x="84" y="395.22" font-family="Arial,Helvetica,sans-serif" font-size="21" font-weight="400" fill="#536872">Request apparently denied.</text>
+<text x="407" y="327.5" font-family="Arial,Helvetica,sans-serif" font-size="25" font-weight="700" fill="#536872">›</text>
+<rect x="430" y="218" width="340" height="210" rx="14" fill="#ffffff" stroke="#cedbe0" stroke-width="2"/>
+<text x="454" y="256.76" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#536872">BUSINESS STATE</text>
+<text x="454" y="316.52" font-family="Arial,Helvetica,sans-serif" font-size="36" font-weight="700" fill="#152a35">draft → submitted</text>
+<text x="454" y="369.22" font-family="Arial,Helvetica,sans-serif" font-size="21" font-weight="400" fill="#536872">Version 0 → 1</text>
+<text x="454" y="395.22" font-family="Arial,Helvetica,sans-serif" font-size="21" font-weight="400" fill="#536872">Same request in the audit.</text>
+<text x="777" y="327.5" font-family="Arial,Helvetica,sans-serif" font-size="25" font-weight="700" fill="#536872">›</text>
+<rect x="800" y="218" width="340" height="210" rx="14" fill="#ffffff" stroke="#cedbe0" stroke-width="2"/>
+<text x="824" y="256.76" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#536872">DECISION</text>
+<text x="824" y="316.52" font-family="Arial,Helvetica,sans-serif" font-size="36" font-weight="700" fill="#006c70">FAIL</text>
+<text x="824" y="369.22" font-family="Arial,Helvetica,sans-serif" font-size="21" font-weight="400" fill="#536872">Keep the finding open.</text>
+<text x="824" y="395.22" font-family="Arial,Helvetica,sans-serif" font-size="21" font-weight="400" fill="#536872">The protected effect occurred.</text>
+<text x="60" y="496.5" font-family="Arial,Helvetica,sans-serif" font-size="25" font-weight="700" fill="#152a35">Correlate authorization, state and audit before closing a finding.</text>
+<text x="60" y="576.22" font-family="Arial,Helvetica,sans-serif" font-size="21" font-weight="400" fill="#536872">Personal lab · synthetic data · AI-assisted · 18 Nov 2026</text>
+</svg>

@@ -1,0 +1,10 @@
+{
+  "cases": 14,
+  "fixed_cases": 12,
+  "intentional_vulnerable_cases": 2,
+  "PASS": 12,
+  "FAIL": 2,
+  "fixtures_verified": 14,
+  "http_requests": 45,
+  "security_assertions": 59
+}

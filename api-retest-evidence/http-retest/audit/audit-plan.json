@@ -1,0 +1,32 @@
+{
+  "scope": "Independent localhost HTTP/SQLite contract audit",
+  "date": "2026-11-18",
+  "status": "Completed against the explicitly scoped HTTP/SQLite contract; see AUDIT.md and independent-results.json",
+  "checks": [
+    "Observe a real HTTP request/response and compare persisted state and correlated audit records",
+    "An authorized request changes exactly the intended expense once",
+    "A foreign tenant cannot read or mutate another tenant's expense",
+    "An unknown identity cannot perform an authorized action",
+    "A revoked grant prevents a fresh operation",
+    "A revoked grant also prevents replay of a previously successful key",
+    "Concurrent requests with one idempotency key do not duplicate the business effect",
+    "Idempotency receipts cannot be reused for another tenant, actor, target or operation",
+    "A key reused across different authorized resource scopes remains independent; unexpected payloads are rejected without effect",
+    "The vulnerable fixture exposes a forbidden mutation even when the response is403",
+    "Separate server instances against the same persisted database retain state and idempotency history",
+    "Rollback or an incomplete observation cannot be mistaken for proof that no forbidden effect occurred",
+    "Correlation IDs are unique or explicitly constrained so independent requests are not conflated"
+  ],
+  "limits_to_verify": [
+    "No external targets",
+    "Test bearer credentials and synthetic identities only",
+    "No claim of production-grade identity, distributed locking or deployment security",
+    "Any concurrency finding is scoped to the actually exercised server/database topology"
+  ],
+  "clarifications": [
+    "Idempotency keys are scoped to tenant, actor, resource and action. Reusing a key for a different authorized resource is valid. Nonempty payloads are rejected.",
+    "The SQL failure test covers rollback within one transaction. Incomplete or tampered external observations are outside this HTTP audit and must not be called a PASS on its authority."
+  ],
+  "final_test_methods": 21,
+  "final_http_observations": 67
+}

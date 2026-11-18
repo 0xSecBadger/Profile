@@ -1,0 +1,3423 @@
+{
+  "project": "HTTP authorization retest laboratory",
+  "created_for": "Personal portfolio, 18 November 2026, developed with AI coding assistance",
+  "recorded_at_utc": "2026-11-18T18:34:57.351223+00:00",
+  "environment": {
+    "python": "3.14.6",
+    "sqlite": "3.53.3",
+    "transport": "localhost TCP HTTP/1.1",
+    "host": "127.0.0.1"
+  },
+  "summary": {
+    "cases": 14,
+    "fixed_cases": 12,
+    "intentional_vulnerable_cases": 2,
+    "PASS": 12,
+    "FAIL": 2,
+    "fixtures_verified": 14,
+    "http_requests": 45,
+    "security_assertions": 59
+  },
+  "limitations": [
+    "Synthetic identities and business data; bearer fixtures are not an OAuth/OIDC implementation.",
+    "Single host, thread-per-request server and SQLite transaction serialization.",
+    "Concurrent requests test local interleavings; distributed races and crash recovery are not covered.",
+    "A graceful server restart tests persistence, not power-loss durability.",
+    "Before/after SQL snapshots are collected by a trusted laboratory observer after requests complete.",
+    "The earlier 28-case SLM evaluation is separate and has not been rerun on this HTTP extension."
+  ],
+  "cases": [
+    {
+      "id": "H01",
+      "title": "Authorized submission commits one business effect",
+      "mode": "fixed",
+      "transport": "actual HTTP over localhost TCP",
+      "before": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [],
+        "requests": [],
+        "audit": []
+      },
+      "http_exchanges": [
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "h01-submit",
+            "laboratory_actor": "alice",
+            "idempotency_key": "key-1",
+            "body": {}
+          },
+          "response": {
+            "status": 201,
+            "body": {
+              "replayed": false,
+              "request_id": "h01-submit",
+              "status": "submitted",
+              "version": 1
+            }
+          }
+        }
+      ],
+      "after": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "submitted",
+            "version": 1,
+            "last_request": "h01-submit"
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "idem_key": "key-1",
+            "original_request": "h01-submit",
+            "version": 1
+          }
+        ],
+        "requests": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "h01-submit"
+          }
+        ],
+        "audit": [
+          {
+            "seq": 1,
+            "request_id": "h01-submit",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "committed",
+            "before_version": 0,
+            "after_version": 1
+          }
+        ]
+      },
+      "security_assertions": [
+        {
+          "assertion": "HTTP created",
+          "holds": true
+        },
+        {
+          "assertion": "submitted once",
+          "holds": true
+        },
+        {
+          "assertion": "request correlated",
+          "holds": true
+        },
+        {
+          "assertion": "receipt recorded",
+          "holds": true
+        },
+        {
+          "assertion": "audit committed",
+          "holds": true
+        }
+      ],
+      "expected_verdict": "PASS",
+      "observed_verdict": "PASS",
+      "fixture_verified": true
+    },
+    {
+      "id": "H02",
+      "title": "Corrected implementation refuses without mutation",
+      "mode": "fixed",
+      "transport": "actual HTTP over localhost TCP",
+      "before": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [],
+        "requests": [],
+        "audit": []
+      },
+      "http_exchanges": [
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/grants/expense-1/alice/revoke",
+            "request_id": "revoke-first",
+            "laboratory_actor": "owner",
+            "idempotency_key": "key-1",
+            "body": {}
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "delegate": "alice",
+              "request_id": "revoke-first",
+              "revoked_grants": 1
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "submit-after-revoke",
+            "laboratory_actor": "alice",
+            "idempotency_key": "key-1",
+            "body": {}
+          },
+          "response": {
+            "status": 403,
+            "body": {
+              "error": "submit permission denied",
+              "request_id": "submit-after-revoke"
+            }
+          }
+        }
+      ],
+      "after": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 0
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [],
+        "requests": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "submit-after-revoke"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "owner",
+            "request_id": "revoke-first"
+          }
+        ],
+        "audit": [
+          {
+            "seq": 1,
+            "request_id": "revoke-first",
+            "tenant": "alpha",
+            "actor": "owner",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "revoke",
+            "outcome": "grant_revoked",
+            "before_version": 0,
+            "after_version": 0
+          },
+          {
+            "seq": 2,
+            "request_id": "submit-after-revoke",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "authorization_denied",
+            "before_version": 0,
+            "after_version": 0
+          }
+        ]
+      },
+      "security_assertions": [
+        {
+          "assertion": "HTTP denial",
+          "holds": true
+        },
+        {
+          "assertion": "business state unchanged",
+          "holds": true
+        },
+        {
+          "assertion": "no receipt created",
+          "holds": true
+        }
+      ],
+      "expected_verdict": "PASS",
+      "observed_verdict": "PASS",
+      "fixture_verified": true
+    },
+    {
+      "id": "H03",
+      "title": "Vulnerable implementation returns403 after committing",
+      "mode": "vulnerable",
+      "transport": "actual HTTP over localhost TCP",
+      "before": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [],
+        "requests": [],
+        "audit": []
+      },
+      "http_exchanges": [
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/grants/expense-1/alice/revoke",
+            "request_id": "revoke-first",
+            "laboratory_actor": "owner",
+            "idempotency_key": "key-1",
+            "body": {}
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "delegate": "alice",
+              "request_id": "revoke-first",
+              "revoked_grants": 1
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "submit-after-revoke",
+            "laboratory_actor": "alice",
+            "idempotency_key": "key-1",
+            "body": {}
+          },
+          "response": {
+            "status": 403,
+            "body": {
+              "error": "submit permission denied",
+              "request_id": "submit-after-revoke"
+            }
+          }
+        }
+      ],
+      "after": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "submitted",
+            "version": 1,
+            "last_request": "submit-after-revoke"
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 0
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [],
+        "requests": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "submit-after-revoke"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "owner",
+            "request_id": "revoke-first"
+          }
+        ],
+        "audit": [
+          {
+            "seq": 1,
+            "request_id": "revoke-first",
+            "tenant": "alpha",
+            "actor": "owner",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "revoke",
+            "outcome": "grant_revoked",
+            "before_version": 0,
+            "after_version": 0
+          },
+          {
+            "seq": 2,
+            "request_id": "submit-after-revoke",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "unauthorized_commit",
+            "before_version": 0,
+            "after_version": 1
+          }
+        ]
+      },
+      "security_assertions": [
+        {
+          "assertion": "HTTP denial",
+          "holds": true
+        },
+        {
+          "assertion": "business state unchanged",
+          "holds": false
+        },
+        {
+          "assertion": "no receipt created",
+          "holds": true
+        }
+      ],
+      "expected_verdict": "FAIL",
+      "observed_verdict": "FAIL",
+      "fixture_verified": true
+    },
+    {
+      "id": "H04",
+      "title": "Authorized idempotent replay",
+      "mode": "fixed",
+      "transport": "actual HTTP over localhost TCP",
+      "before": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [],
+        "requests": [],
+        "audit": []
+      },
+      "http_exchanges": [
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "initial-submit",
+            "laboratory_actor": "alice",
+            "idempotency_key": "key-1",
+            "body": {}
+          },
+          "response": {
+            "status": 201,
+            "body": {
+              "replayed": false,
+              "request_id": "initial-submit",
+              "status": "submitted",
+              "version": 1
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "authorized-replay",
+            "laboratory_actor": "alice",
+            "idempotency_key": "key-1",
+            "body": {}
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "original_request": "initial-submit",
+              "replayed": true,
+              "request_id": "authorized-replay",
+              "status": "submitted",
+              "version": 1
+            }
+          }
+        }
+      ],
+      "after": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "submitted",
+            "version": 1,
+            "last_request": "initial-submit"
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "idem_key": "key-1",
+            "original_request": "initial-submit",
+            "version": 1
+          }
+        ],
+        "requests": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "authorized-replay"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "initial-submit"
+          }
+        ],
+        "audit": [
+          {
+            "seq": 1,
+            "request_id": "initial-submit",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "committed",
+            "before_version": 0,
+            "after_version": 1
+          },
+          {
+            "seq": 2,
+            "request_id": "authorized-replay",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "authorized_replay",
+            "before_version": 1,
+            "after_version": 1
+          }
+        ]
+      },
+      "security_assertions": [
+        {
+          "assertion": "statuses correct",
+          "holds": true
+        },
+        {
+          "assertion": "exactly one version",
+          "holds": true
+        },
+        {
+          "assertion": "exactly one receipt",
+          "holds": true
+        },
+        {
+          "assertion": "original request preserved",
+          "holds": true
+        },
+        {
+          "assertion": "replay identified",
+          "holds": true
+        },
+        {
+          "assertion": "audit records replay",
+          "holds": true
+        }
+      ],
+      "expected_verdict": "PASS",
+      "observed_verdict": "PASS",
+      "fixture_verified": true
+    },
+    {
+      "id": "H05",
+      "title": "Reauthorization takes precedence over cached replay",
+      "mode": "fixed",
+      "transport": "actual HTTP over localhost TCP",
+      "before": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [],
+        "requests": [],
+        "audit": []
+      },
+      "http_exchanges": [
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "initial-submit",
+            "laboratory_actor": "alice",
+            "idempotency_key": "key-1",
+            "body": {}
+          },
+          "response": {
+            "status": 201,
+            "body": {
+              "replayed": false,
+              "request_id": "initial-submit",
+              "status": "submitted",
+              "version": 1
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/grants/expense-1/alice/revoke",
+            "request_id": "revoke-after-submit",
+            "laboratory_actor": "owner",
+            "idempotency_key": "key-1",
+            "body": {}
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "delegate": "alice",
+              "request_id": "revoke-after-submit",
+              "revoked_grants": 1
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "replay-after-revoke",
+            "laboratory_actor": "alice",
+            "idempotency_key": "key-1",
+            "body": {}
+          },
+          "response": {
+            "status": 403,
+            "body": {
+              "error": "submit permission denied",
+              "request_id": "replay-after-revoke"
+            }
+          }
+        }
+      ],
+      "after": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "submitted",
+            "version": 1,
+            "last_request": "initial-submit"
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 0
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "idem_key": "key-1",
+            "original_request": "initial-submit",
+            "version": 1
+          }
+        ],
+        "requests": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "initial-submit"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "replay-after-revoke"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "owner",
+            "request_id": "revoke-after-submit"
+          }
+        ],
+        "audit": [
+          {
+            "seq": 1,
+            "request_id": "initial-submit",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "committed",
+            "before_version": 0,
+            "after_version": 1
+          },
+          {
+            "seq": 2,
+            "request_id": "revoke-after-submit",
+            "tenant": "alpha",
+            "actor": "owner",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "revoke",
+            "outcome": "grant_revoked",
+            "before_version": 1,
+            "after_version": 1
+          },
+          {
+            "seq": 3,
+            "request_id": "replay-after-revoke",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "authorization_denied",
+            "before_version": 1,
+            "after_version": 1
+          }
+        ]
+      },
+      "security_assertions": [
+        {
+          "assertion": "initial submission created",
+          "holds": true
+        },
+        {
+          "assertion": "replay reauthorized and denied",
+          "holds": true
+        },
+        {
+          "assertion": "no second effect",
+          "holds": true
+        },
+        {
+          "assertion": "original request preserved",
+          "holds": true
+        }
+      ],
+      "expected_verdict": "PASS",
+      "observed_verdict": "PASS",
+      "fixture_verified": true
+    },
+    {
+      "id": "H06",
+      "title": "Vulnerable cache bypasses revoked permission",
+      "mode": "vulnerable",
+      "transport": "actual HTTP over localhost TCP",
+      "before": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [],
+        "requests": [],
+        "audit": []
+      },
+      "http_exchanges": [
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "initial-submit",
+            "laboratory_actor": "alice",
+            "idempotency_key": "key-1",
+            "body": {}
+          },
+          "response": {
+            "status": 201,
+            "body": {
+              "replayed": false,
+              "request_id": "initial-submit",
+              "status": "submitted",
+              "version": 1
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/grants/expense-1/alice/revoke",
+            "request_id": "revoke-after-submit",
+            "laboratory_actor": "owner",
+            "idempotency_key": "key-1",
+            "body": {}
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "delegate": "alice",
+              "request_id": "revoke-after-submit",
+              "revoked_grants": 1
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "replay-after-revoke",
+            "laboratory_actor": "alice",
+            "idempotency_key": "key-1",
+            "body": {}
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "original_request": "initial-submit",
+              "replayed": true,
+              "request_id": "replay-after-revoke",
+              "status": "submitted",
+              "version": 1
+            }
+          }
+        }
+      ],
+      "after": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "submitted",
+            "version": 1,
+            "last_request": "initial-submit"
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 0
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "idem_key": "key-1",
+            "original_request": "initial-submit",
+            "version": 1
+          }
+        ],
+        "requests": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "initial-submit"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "replay-after-revoke"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "owner",
+            "request_id": "revoke-after-submit"
+          }
+        ],
+        "audit": [
+          {
+            "seq": 1,
+            "request_id": "initial-submit",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "committed",
+            "before_version": 0,
+            "after_version": 1
+          },
+          {
+            "seq": 2,
+            "request_id": "revoke-after-submit",
+            "tenant": "alpha",
+            "actor": "owner",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "revoke",
+            "outcome": "grant_revoked",
+            "before_version": 1,
+            "after_version": 1
+          },
+          {
+            "seq": 3,
+            "request_id": "replay-after-revoke",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "cached_before_authorization",
+            "before_version": 1,
+            "after_version": 1
+          }
+        ]
+      },
+      "security_assertions": [
+        {
+          "assertion": "initial submission created",
+          "holds": true
+        },
+        {
+          "assertion": "replay reauthorized and denied",
+          "holds": false
+        },
+        {
+          "assertion": "no second effect",
+          "holds": true
+        },
+        {
+          "assertion": "original request preserved",
+          "holds": true
+        }
+      ],
+      "expected_verdict": "FAIL",
+      "observed_verdict": "FAIL",
+      "fixture_verified": true
+    },
+    {
+      "id": "H07",
+      "title": "Other tenant cannot be modified",
+      "mode": "fixed",
+      "transport": "actual HTTP over localhost TCP",
+      "before": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [],
+        "requests": [],
+        "audit": []
+      },
+      "http_exchanges": [
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/beta/expenses/expense-1/submit",
+            "request_id": "wrong-tenant",
+            "laboratory_actor": "alice",
+            "idempotency_key": "key-1",
+            "body": {}
+          },
+          "response": {
+            "status": 403,
+            "body": {
+              "error": "tenant denied",
+              "request_id": "wrong-tenant"
+            }
+          }
+        }
+      ],
+      "after": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [],
+        "requests": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "wrong-tenant"
+          }
+        ],
+        "audit": [
+          {
+            "seq": 1,
+            "request_id": "wrong-tenant",
+            "tenant": "beta",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "tenant_denied",
+            "before_version": null,
+            "after_version": null
+          }
+        ]
+      },
+      "security_assertions": [
+        {
+          "assertion": "HTTP denial",
+          "holds": true
+        },
+        {
+          "assertion": "business state unchanged",
+          "holds": true
+        },
+        {
+          "assertion": "no receipt created",
+          "holds": true
+        }
+      ],
+      "expected_verdict": "PASS",
+      "observed_verdict": "PASS",
+      "fixture_verified": true
+    },
+    {
+      "id": "H08",
+      "title": "View permission does not authorize submit",
+      "mode": "fixed",
+      "transport": "actual HTTP over localhost TCP",
+      "before": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [],
+        "requests": [],
+        "audit": []
+      },
+      "http_exchanges": [
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "view-is-not-submit",
+            "laboratory_actor": "bob",
+            "idempotency_key": "key-1",
+            "body": {}
+          },
+          "response": {
+            "status": 403,
+            "body": {
+              "error": "submit permission denied",
+              "request_id": "view-is-not-submit"
+            }
+          }
+        }
+      ],
+      "after": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [],
+        "requests": [
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "request_id": "view-is-not-submit"
+          }
+        ],
+        "audit": [
+          {
+            "seq": 1,
+            "request_id": "view-is-not-submit",
+            "tenant": "alpha",
+            "actor": "bob",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "authorization_denied",
+            "before_version": 0,
+            "after_version": 0
+          }
+        ]
+      },
+      "security_assertions": [
+        {
+          "assertion": "HTTP denial",
+          "holds": true
+        },
+        {
+          "assertion": "business state unchanged",
+          "holds": true
+        },
+        {
+          "assertion": "no receipt created",
+          "holds": true
+        }
+      ],
+      "expected_verdict": "PASS",
+      "observed_verdict": "PASS",
+      "fixture_verified": true
+    },
+    {
+      "id": "H09",
+      "title": "Twelve concurrent submissions with one idempotency key",
+      "mode": "fixed",
+      "transport": "actual HTTP over localhost TCP",
+      "before": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [],
+        "requests": [],
+        "audit": []
+      },
+      "http_exchanges": [
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "same-key-00",
+            "laboratory_actor": "alice",
+            "idempotency_key": "parallel-key",
+            "body": {}
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "original_request": "same-key-11",
+              "replayed": true,
+              "request_id": "same-key-00",
+              "status": "submitted",
+              "version": 1
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "same-key-01",
+            "laboratory_actor": "alice",
+            "idempotency_key": "parallel-key",
+            "body": {}
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "original_request": "same-key-11",
+              "replayed": true,
+              "request_id": "same-key-01",
+              "status": "submitted",
+              "version": 1
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "same-key-02",
+            "laboratory_actor": "alice",
+            "idempotency_key": "parallel-key",
+            "body": {}
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "original_request": "same-key-11",
+              "replayed": true,
+              "request_id": "same-key-02",
+              "status": "submitted",
+              "version": 1
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "same-key-03",
+            "laboratory_actor": "alice",
+            "idempotency_key": "parallel-key",
+            "body": {}
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "original_request": "same-key-11",
+              "replayed": true,
+              "request_id": "same-key-03",
+              "status": "submitted",
+              "version": 1
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "same-key-04",
+            "laboratory_actor": "alice",
+            "idempotency_key": "parallel-key",
+            "body": {}
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "original_request": "same-key-11",
+              "replayed": true,
+              "request_id": "same-key-04",
+              "status": "submitted",
+              "version": 1
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "same-key-05",
+            "laboratory_actor": "alice",
+            "idempotency_key": "parallel-key",
+            "body": {}
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "original_request": "same-key-11",
+              "replayed": true,
+              "request_id": "same-key-05",
+              "status": "submitted",
+              "version": 1
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "same-key-06",
+            "laboratory_actor": "alice",
+            "idempotency_key": "parallel-key",
+            "body": {}
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "original_request": "same-key-11",
+              "replayed": true,
+              "request_id": "same-key-06",
+              "status": "submitted",
+              "version": 1
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "same-key-07",
+            "laboratory_actor": "alice",
+            "idempotency_key": "parallel-key",
+            "body": {}
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "original_request": "same-key-11",
+              "replayed": true,
+              "request_id": "same-key-07",
+              "status": "submitted",
+              "version": 1
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "same-key-08",
+            "laboratory_actor": "alice",
+            "idempotency_key": "parallel-key",
+            "body": {}
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "original_request": "same-key-11",
+              "replayed": true,
+              "request_id": "same-key-08",
+              "status": "submitted",
+              "version": 1
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "same-key-09",
+            "laboratory_actor": "alice",
+            "idempotency_key": "parallel-key",
+            "body": {}
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "original_request": "same-key-11",
+              "replayed": true,
+              "request_id": "same-key-09",
+              "status": "submitted",
+              "version": 1
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "same-key-10",
+            "laboratory_actor": "alice",
+            "idempotency_key": "parallel-key",
+            "body": {}
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "original_request": "same-key-11",
+              "replayed": true,
+              "request_id": "same-key-10",
+              "status": "submitted",
+              "version": 1
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "same-key-11",
+            "laboratory_actor": "alice",
+            "idempotency_key": "parallel-key",
+            "body": {}
+          },
+          "response": {
+            "status": 201,
+            "body": {
+              "replayed": false,
+              "request_id": "same-key-11",
+              "status": "submitted",
+              "version": 1
+            }
+          }
+        }
+      ],
+      "after": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "submitted",
+            "version": 1,
+            "last_request": "same-key-11"
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "idem_key": "parallel-key",
+            "original_request": "same-key-11",
+            "version": 1
+          }
+        ],
+        "requests": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "same-key-00"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "same-key-01"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "same-key-02"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "same-key-03"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "same-key-04"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "same-key-05"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "same-key-06"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "same-key-07"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "same-key-08"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "same-key-09"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "same-key-10"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "same-key-11"
+          }
+        ],
+        "audit": [
+          {
+            "seq": 1,
+            "request_id": "same-key-11",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "committed",
+            "before_version": 0,
+            "after_version": 1
+          },
+          {
+            "seq": 2,
+            "request_id": "same-key-03",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "authorized_replay",
+            "before_version": 1,
+            "after_version": 1
+          },
+          {
+            "seq": 3,
+            "request_id": "same-key-07",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "authorized_replay",
+            "before_version": 1,
+            "after_version": 1
+          },
+          {
+            "seq": 4,
+            "request_id": "same-key-09",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "authorized_replay",
+            "before_version": 1,
+            "after_version": 1
+          },
+          {
+            "seq": 5,
+            "request_id": "same-key-05",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "authorized_replay",
+            "before_version": 1,
+            "after_version": 1
+          },
+          {
+            "seq": 6,
+            "request_id": "same-key-00",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "authorized_replay",
+            "before_version": 1,
+            "after_version": 1
+          },
+          {
+            "seq": 7,
+            "request_id": "same-key-01",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "authorized_replay",
+            "before_version": 1,
+            "after_version": 1
+          },
+          {
+            "seq": 8,
+            "request_id": "same-key-08",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "authorized_replay",
+            "before_version": 1,
+            "after_version": 1
+          },
+          {
+            "seq": 9,
+            "request_id": "same-key-06",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "authorized_replay",
+            "before_version": 1,
+            "after_version": 1
+          },
+          {
+            "seq": 10,
+            "request_id": "same-key-04",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "authorized_replay",
+            "before_version": 1,
+            "after_version": 1
+          },
+          {
+            "seq": 11,
+            "request_id": "same-key-10",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "authorized_replay",
+            "before_version": 1,
+            "after_version": 1
+          },
+          {
+            "seq": 12,
+            "request_id": "same-key-02",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "authorized_replay",
+            "before_version": 1,
+            "after_version": 1
+          }
+        ]
+      },
+      "security_assertions": [
+        {
+          "assertion": "twelve responses",
+          "holds": true
+        },
+        {
+          "assertion": "one created",
+          "holds": true
+        },
+        {
+          "assertion": "eleven replays",
+          "holds": true
+        },
+        {
+          "assertion": "one business version",
+          "holds": true
+        },
+        {
+          "assertion": "one receipt",
+          "holds": true
+        },
+        {
+          "assertion": "one commit audited",
+          "holds": true
+        },
+        {
+          "assertion": "all requests correlated",
+          "holds": true
+        }
+      ],
+      "expected_verdict": "PASS",
+      "observed_verdict": "PASS",
+      "fixture_verified": true
+    },
+    {
+      "id": "H10",
+      "title": "Twelve concurrent submissions with different keys",
+      "mode": "fixed",
+      "transport": "actual HTTP over localhost TCP",
+      "before": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [],
+        "requests": [],
+        "audit": []
+      },
+      "http_exchanges": [
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "different-key-00",
+            "laboratory_actor": "alice",
+            "idempotency_key": "parallel-00",
+            "body": {}
+          },
+          "response": {
+            "status": 409,
+            "body": {
+              "error": "expense already submitted",
+              "request_id": "different-key-00"
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "different-key-01",
+            "laboratory_actor": "alice",
+            "idempotency_key": "parallel-01",
+            "body": {}
+          },
+          "response": {
+            "status": 409,
+            "body": {
+              "error": "expense already submitted",
+              "request_id": "different-key-01"
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "different-key-02",
+            "laboratory_actor": "alice",
+            "idempotency_key": "parallel-02",
+            "body": {}
+          },
+          "response": {
+            "status": 409,
+            "body": {
+              "error": "expense already submitted",
+              "request_id": "different-key-02"
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "different-key-03",
+            "laboratory_actor": "alice",
+            "idempotency_key": "parallel-03",
+            "body": {}
+          },
+          "response": {
+            "status": 409,
+            "body": {
+              "error": "expense already submitted",
+              "request_id": "different-key-03"
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "different-key-04",
+            "laboratory_actor": "alice",
+            "idempotency_key": "parallel-04",
+            "body": {}
+          },
+          "response": {
+            "status": 409,
+            "body": {
+              "error": "expense already submitted",
+              "request_id": "different-key-04"
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "different-key-05",
+            "laboratory_actor": "alice",
+            "idempotency_key": "parallel-05",
+            "body": {}
+          },
+          "response": {
+            "status": 409,
+            "body": {
+              "error": "expense already submitted",
+              "request_id": "different-key-05"
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "different-key-06",
+            "laboratory_actor": "alice",
+            "idempotency_key": "parallel-06",
+            "body": {}
+          },
+          "response": {
+            "status": 201,
+            "body": {
+              "replayed": false,
+              "request_id": "different-key-06",
+              "status": "submitted",
+              "version": 1
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "different-key-07",
+            "laboratory_actor": "alice",
+            "idempotency_key": "parallel-07",
+            "body": {}
+          },
+          "response": {
+            "status": 409,
+            "body": {
+              "error": "expense already submitted",
+              "request_id": "different-key-07"
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "different-key-08",
+            "laboratory_actor": "alice",
+            "idempotency_key": "parallel-08",
+            "body": {}
+          },
+          "response": {
+            "status": 409,
+            "body": {
+              "error": "expense already submitted",
+              "request_id": "different-key-08"
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "different-key-09",
+            "laboratory_actor": "alice",
+            "idempotency_key": "parallel-09",
+            "body": {}
+          },
+          "response": {
+            "status": 409,
+            "body": {
+              "error": "expense already submitted",
+              "request_id": "different-key-09"
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "different-key-10",
+            "laboratory_actor": "alice",
+            "idempotency_key": "parallel-10",
+            "body": {}
+          },
+          "response": {
+            "status": 409,
+            "body": {
+              "error": "expense already submitted",
+              "request_id": "different-key-10"
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "different-key-11",
+            "laboratory_actor": "alice",
+            "idempotency_key": "parallel-11",
+            "body": {}
+          },
+          "response": {
+            "status": 409,
+            "body": {
+              "error": "expense already submitted",
+              "request_id": "different-key-11"
+            }
+          }
+        }
+      ],
+      "after": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "submitted",
+            "version": 1,
+            "last_request": "different-key-06"
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "idem_key": "parallel-06",
+            "original_request": "different-key-06",
+            "version": 1
+          }
+        ],
+        "requests": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "different-key-00"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "different-key-01"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "different-key-02"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "different-key-03"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "different-key-04"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "different-key-05"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "different-key-06"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "different-key-07"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "different-key-08"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "different-key-09"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "different-key-10"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "different-key-11"
+          }
+        ],
+        "audit": [
+          {
+            "seq": 1,
+            "request_id": "different-key-06",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "committed",
+            "before_version": 0,
+            "after_version": 1
+          },
+          {
+            "seq": 2,
+            "request_id": "different-key-07",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "already_submitted",
+            "before_version": 1,
+            "after_version": 1
+          },
+          {
+            "seq": 3,
+            "request_id": "different-key-03",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "already_submitted",
+            "before_version": 1,
+            "after_version": 1
+          },
+          {
+            "seq": 4,
+            "request_id": "different-key-00",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "already_submitted",
+            "before_version": 1,
+            "after_version": 1
+          },
+          {
+            "seq": 5,
+            "request_id": "different-key-11",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "already_submitted",
+            "before_version": 1,
+            "after_version": 1
+          },
+          {
+            "seq": 6,
+            "request_id": "different-key-09",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "already_submitted",
+            "before_version": 1,
+            "after_version": 1
+          },
+          {
+            "seq": 7,
+            "request_id": "different-key-10",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "already_submitted",
+            "before_version": 1,
+            "after_version": 1
+          },
+          {
+            "seq": 8,
+            "request_id": "different-key-08",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "already_submitted",
+            "before_version": 1,
+            "after_version": 1
+          },
+          {
+            "seq": 9,
+            "request_id": "different-key-05",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "already_submitted",
+            "before_version": 1,
+            "after_version": 1
+          },
+          {
+            "seq": 10,
+            "request_id": "different-key-02",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "already_submitted",
+            "before_version": 1,
+            "after_version": 1
+          },
+          {
+            "seq": 11,
+            "request_id": "different-key-04",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "already_submitted",
+            "before_version": 1,
+            "after_version": 1
+          },
+          {
+            "seq": 12,
+            "request_id": "different-key-01",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "already_submitted",
+            "before_version": 1,
+            "after_version": 1
+          }
+        ]
+      },
+      "security_assertions": [
+        {
+          "assertion": "twelve responses",
+          "holds": true
+        },
+        {
+          "assertion": "one created",
+          "holds": true
+        },
+        {
+          "assertion": "eleven conflicts",
+          "holds": true
+        },
+        {
+          "assertion": "one business version",
+          "holds": true
+        },
+        {
+          "assertion": "one receipt",
+          "holds": true
+        },
+        {
+          "assertion": "one commit audited",
+          "holds": true
+        }
+      ],
+      "expected_verdict": "PASS",
+      "observed_verdict": "PASS",
+      "fixture_verified": true
+    },
+    {
+      "id": "H11",
+      "title": "SQLite state and receipts survive server restart",
+      "mode": "fixed",
+      "transport": "actual HTTP over localhost TCP",
+      "before": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [],
+        "requests": [],
+        "audit": []
+      },
+      "http_exchanges": [
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "before-restart",
+            "laboratory_actor": "alice",
+            "idempotency_key": "key-1",
+            "body": {}
+          },
+          "response": {
+            "status": 201,
+            "body": {
+              "replayed": false,
+              "request_id": "before-restart",
+              "status": "submitted",
+              "version": 1
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "after-restart",
+            "laboratory_actor": "alice",
+            "idempotency_key": "key-1",
+            "body": {}
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "original_request": "before-restart",
+              "replayed": true,
+              "request_id": "after-restart",
+              "status": "submitted",
+              "version": 1
+            }
+          }
+        }
+      ],
+      "snapshot_after_shutdown": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "submitted",
+            "version": 1,
+            "last_request": "before-restart"
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "idem_key": "key-1",
+            "original_request": "before-restart",
+            "version": 1
+          }
+        ],
+        "requests": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "before-restart"
+          }
+        ],
+        "audit": [
+          {
+            "seq": 1,
+            "request_id": "before-restart",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "committed",
+            "before_version": 0,
+            "after_version": 1
+          }
+        ]
+      },
+      "after": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "submitted",
+            "version": 1,
+            "last_request": "before-restart"
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "idem_key": "key-1",
+            "original_request": "before-restart",
+            "version": 1
+          }
+        ],
+        "requests": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "after-restart"
+          },
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "before-restart"
+          }
+        ],
+        "audit": [
+          {
+            "seq": 1,
+            "request_id": "before-restart",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "committed",
+            "before_version": 0,
+            "after_version": 1
+          },
+          {
+            "seq": 2,
+            "request_id": "after-restart",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "authorized_replay",
+            "before_version": 1,
+            "after_version": 1
+          }
+        ]
+      },
+      "security_assertions": [
+        {
+          "assertion": "first submission created",
+          "holds": true
+        },
+        {
+          "assertion": "receipt replayed after restart",
+          "holds": true
+        },
+        {
+          "assertion": "persisted business state",
+          "holds": true
+        },
+        {
+          "assertion": "original request retained",
+          "holds": true
+        },
+        {
+          "assertion": "persisted receipt",
+          "holds": true
+        },
+        {
+          "assertion": "both requests in audit",
+          "holds": true
+        }
+      ],
+      "expected_verdict": "PASS",
+      "observed_verdict": "PASS",
+      "fixture_verified": true
+    },
+    {
+      "id": "H12",
+      "title": "Unknown laboratory identity cannot mutate",
+      "mode": "fixed",
+      "transport": "actual HTTP over localhost TCP",
+      "before": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [],
+        "requests": [],
+        "audit": []
+      },
+      "http_exchanges": [
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "unknown-identity",
+            "laboratory_actor": "unknown",
+            "idempotency_key": "key-1",
+            "body": {}
+          },
+          "response": {
+            "status": 401,
+            "body": {
+              "error": "unknown laboratory identity",
+              "request_id": "unknown-identity"
+            }
+          }
+        }
+      ],
+      "after": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [],
+        "requests": [],
+        "audit": []
+      },
+      "security_assertions": [
+        {
+          "assertion": "HTTP unauthorized",
+          "holds": true
+        },
+        {
+          "assertion": "full snapshot unchanged",
+          "holds": true
+        }
+      ],
+      "expected_verdict": "PASS",
+      "observed_verdict": "PASS",
+      "fixture_verified": true
+    },
+    {
+      "id": "H13",
+      "title": "Delegate cannot revoke a grant",
+      "mode": "fixed",
+      "transport": "actual HTTP over localhost TCP",
+      "before": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [],
+        "requests": [],
+        "audit": []
+      },
+      "http_exchanges": [
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/grants/expense-1/alice/revoke",
+            "request_id": "delegate-revoke",
+            "laboratory_actor": "alice",
+            "idempotency_key": "key-1",
+            "body": {}
+          },
+          "response": {
+            "status": 403,
+            "body": {
+              "error": "owner role required",
+              "request_id": "delegate-revoke"
+            }
+          }
+        }
+      ],
+      "after": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [],
+        "requests": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "delegate-revoke"
+          }
+        ],
+        "audit": [
+          {
+            "seq": 1,
+            "request_id": "delegate-revoke",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "revoke",
+            "outcome": "role_denied",
+            "before_version": 0,
+            "after_version": 0
+          }
+        ]
+      },
+      "security_assertions": [
+        {
+          "assertion": "HTTP denied",
+          "holds": true
+        },
+        {
+          "assertion": "grants unchanged",
+          "holds": true
+        },
+        {
+          "assertion": "expenses unchanged",
+          "holds": true
+        }
+      ],
+      "expected_verdict": "PASS",
+      "observed_verdict": "PASS",
+      "fixture_verified": true
+    },
+    {
+      "id": "H14",
+      "title": "Repeated correlation ID is rejected before replay",
+      "mode": "fixed",
+      "transport": "actual HTTP over localhost TCP",
+      "before": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [],
+        "requests": [],
+        "audit": []
+      },
+      "http_exchanges": [
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "same-request-id",
+            "laboratory_actor": "alice",
+            "idempotency_key": "key-1",
+            "body": {}
+          },
+          "response": {
+            "status": 201,
+            "body": {
+              "replayed": false,
+              "request_id": "same-request-id",
+              "status": "submitted",
+              "version": 1
+            }
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "path": "/tenants/alpha/expenses/expense-1/submit",
+            "request_id": "same-request-id",
+            "laboratory_actor": "alice",
+            "idempotency_key": "key-1",
+            "body": {}
+          },
+          "response": {
+            "status": 409,
+            "body": {
+              "error": "request identifier already used",
+              "request_id": "same-request-id"
+            }
+          }
+        }
+      ],
+      "after": {
+        "expenses": [
+          {
+            "tenant": "alpha",
+            "id": "expense-1",
+            "status": "submitted",
+            "version": 1,
+            "last_request": "same-request-id"
+          },
+          {
+            "tenant": "beta",
+            "id": "expense-1",
+            "status": "draft",
+            "version": 0,
+            "last_request": null
+          }
+        ],
+        "grants": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          },
+          {
+            "tenant": "alpha",
+            "actor": "bob",
+            "expense_id": "expense-1",
+            "action": "view",
+            "active": 1
+          },
+          {
+            "tenant": "beta",
+            "actor": "bea",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "active": 1
+          }
+        ],
+        "receipts": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "idem_key": "key-1",
+            "original_request": "same-request-id",
+            "version": 1
+          }
+        ],
+        "requests": [
+          {
+            "tenant": "alpha",
+            "actor": "alice",
+            "request_id": "same-request-id"
+          }
+        ],
+        "audit": [
+          {
+            "seq": 1,
+            "request_id": "same-request-id",
+            "tenant": "alpha",
+            "actor": "alice",
+            "principal_tenant": "alpha",
+            "expense_id": "expense-1",
+            "action": "submit",
+            "outcome": "committed",
+            "before_version": 0,
+            "after_version": 1
+          }
+        ]
+      },
+      "security_assertions": [
+        {
+          "assertion": "statuses correct",
+          "holds": true
+        },
+        {
+          "assertion": "one effect",
+          "holds": true
+        },
+        {
+          "assertion": "one audit record",
+          "holds": true
+        },
+        {
+          "assertion": "one request record",
+          "holds": true
+        }
+      ],
+      "expected_verdict": "PASS",
+      "observed_verdict": "PASS",
+      "fixture_verified": true
+    }
+  ],
+  "source_sha256": {
+    "run_demo.py": "b457711257b30f3f8c6824fc27c24e3a5b024da1245b352a5586ec028aefc95d",
+    "server.py": "b3cbaa7e012e4f4e9d114cd1f70e24eabf6a1fba533b7ebd7244a45e7b1b986f",
+    "test_http.py": "7e578d7e665a7822eb196e283783f3b13b50ec2c8c09c45d0e64bc90bd80e180"
+  }
+}

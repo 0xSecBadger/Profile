@@ -1,0 +1,17 @@
+{
+  "test_methods": 10,
+  "test_returncode": 0,
+  "demo_returncode": 0,
+  "summary": {
+    "cases": 14,
+    "fixed_cases": 12,
+    "intentional_vulnerable_cases": 2,
+    "PASS": 12,
+    "FAIL": 2,
+    "fixtures_verified": 14,
+    "http_requests": 45,
+    "security_assertions": 59
+  },
+  "source_hashes_match": true,
+  "report_sha256": "0163d0fe5d6db4c8c87a27ba89376d166a3c3988964af4f7aa8c5c2346cd8212"
+}

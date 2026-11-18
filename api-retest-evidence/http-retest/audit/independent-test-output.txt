@@ -1,0 +1,26 @@
+test_authorized_effect_is_persisted_and_correlated (__main__.HttpContractAudit.test_authorized_effect_is_persisted_and_correlated) ... ok
+test_concurrent_duplicate_request_id_is_rejected (__main__.HttpContractAudit.test_concurrent_duplicate_request_id_is_rejected) ... ok
+test_concurrent_same_key_changes_state_once (__main__.HttpContractAudit.test_concurrent_same_key_changes_state_once) ... ok
+test_delegate_cannot_revoke_another_delegate (__main__.HttpContractAudit.test_delegate_cannot_revoke_another_delegate) ... ok
+test_foreign_tenant_is_denied_without_changing_either_tenant (__main__.HttpContractAudit.test_foreign_tenant_is_denied_without_changing_either_tenant) ... ok
+test_fresh_operation_after_revocation_is_denied (__main__.HttpContractAudit.test_fresh_operation_after_revocation_is_denied) ... ok
+test_homonymous_actors_keep_authenticated_and_target_tenants_distinct (__main__.HttpContractAudit.test_homonymous_actors_keep_authenticated_and_target_tenants_distinct) ... ok
+test_incomplete_body_times_out_and_server_shutdown_completes (__main__.HttpContractAudit.test_incomplete_body_times_out_and_server_shutdown_completes) ... ok
+test_receipt_does_not_cross_actor_scope (__main__.HttpContractAudit.test_receipt_does_not_cross_actor_scope) ... ok
+test_reused_request_identifier_cannot_hide_another_operation (__main__.HttpContractAudit.test_reused_request_identifier_cannot_hide_another_operation) ... ok
+test_revocation_race_has_no_authorized_effect_after_revocation_commit (__main__.HttpContractAudit.test_revocation_race_has_no_authorized_effect_after_revocation_commit) ... ok
+test_same_key_in_two_resources_has_independent_effects (__main__.HttpContractAudit.test_same_key_in_two_resources_has_independent_effects) ... ok
+test_same_key_in_two_tenants_does_not_share_receipts (__main__.HttpContractAudit.test_same_key_in_two_tenants_does_not_share_receipts) ... ok
+test_server_restart_preserves_effect_receipt_and_revocation (__main__.HttpContractAudit.test_server_restart_preserves_effect_receipt_and_revocation) ... ok
+test_storage_error_rolls_back_business_effect_and_correlation_record (__main__.HttpContractAudit.test_storage_error_rolls_back_business_effect_and_correlation_record) ... ok
+test_successful_key_does_not_override_later_revocation (__main__.HttpContractAudit.test_successful_key_does_not_override_later_revocation) ... ok
+test_unexpected_payload_is_rejected_before_business_effect (__main__.HttpContractAudit.test_unexpected_payload_is_rejected_before_business_effect) ... ok
+test_unknown_identity_has_no_business_or_audit_effect (__main__.HttpContractAudit.test_unknown_identity_has_no_business_or_audit_effect) ... ok
+test_view_permission_does_not_allow_submit_and_positive_control_still_works (__main__.HttpContractAudit.test_view_permission_does_not_allow_submit_and_positive_control_still_works) ... ok
+test_vulnerable_cache_fixture_reproduces_revocation_bypass (__main__.HttpContractAudit.test_vulnerable_cache_fixture_reproduces_revocation_bypass) ... ok
+test_vulnerable_fixture_has_forbidden_persisted_effect_despite_403 (__main__.HttpContractAudit.test_vulnerable_fixture_has_forbidden_persisted_effect_despite_403) ... ok
+
+----------------------------------------------------------------------
+Ran 21 tests in 2.962s
+
+OK

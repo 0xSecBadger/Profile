@@ -1,0 +1,15 @@
+test_403_does_not_hide_state_effect_in_fixed_version (test_http.HTTPContractTests.test_403_does_not_hide_state_effect_in_fixed_version) ... ok
+test_authorized_positive_control (test_http.HTTPContractTests.test_authorized_positive_control) ... ok
+test_concurrent_different_keys_still_commit_only_once (test_http.HTTPContractTests.test_concurrent_different_keys_still_commit_only_once) ... ok
+test_concurrent_same_key_commits_only_once (test_http.HTTPContractTests.test_concurrent_same_key_commits_only_once) ... ok
+test_fixture_outcomes_and_observation_contracts (test_http.HTTPContractTests.test_fixture_outcomes_and_observation_contracts) ... ok
+test_reauthorization_precedes_receipt_lookup (test_http.HTTPContractTests.test_reauthorization_precedes_receipt_lookup) ... ok
+test_restart_preserves_receipt_and_business_state (test_http.HTTPContractTests.test_restart_preserves_receipt_and_business_state) ... ok
+test_reused_request_identifier_is_not_a_new_attempt (test_http.HTTPContractTests.test_reused_request_identifier_is_not_a_new_attempt) ... ok
+test_scope_and_role_denials_preserve_protected_state (test_http.HTTPContractTests.test_scope_and_role_denials_preserve_protected_state) ... ok
+test_unknown_identity_has_no_database_effect (test_http.HTTPContractTests.test_unknown_identity_has_no_database_effect) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.644s
+
+OK
