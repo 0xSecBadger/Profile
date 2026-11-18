@@ -18,7 +18,9 @@ In case **H03**, permission is revoked and the local HTTP service returns `403`.
 
 In the corrected case **H02**, the response is also `403`, while the record remains `draft v0` and the audit records the denial. **Decision: PASS for this observed attempt.** The experiment uses real localhost HTTP requests and a persistent SQLite file, with synthetic identities and data.
 
-**Verified locally:** 14 cases and 45 HTTP requests, with 12 PASS and 2 deliberate FAIL outcomes. The 10 regression tests and 21 separately authored contract tests pass. [Audit findings and limits](api-retest-evidence/http-retest/audit/AUDIT.md).
+[![Verify AppSec evidence](https://github.com/0xSecBadger/Profile/actions/workflows/verify.yml/badge.svg)](https://github.com/0xSecBadger/Profile/actions/runs/44371823169)
+
+**Reproduced locally and in [public CI on Ubuntu / Python 3.12](https://github.com/0xSecBadger/Profile/actions/runs/44371823169):** 14 cases and 45 HTTP requests, with 12 PASS and 2 deliberate FAIL outcomes. The 10 regression tests and 21 separately authored contract tests pass. [Audit findings and limits](api-retest-evidence/http-retest/audit/AUDIT.md).
 
 **Inspect or reproduce:** [HTTP results](api-retest-evidence/http-retest/results/HTTP-RESULTS.md) · [Request/response and SQL evidence](api-retest-evidence/http-retest/results/http-report.json) · [Service and transaction boundary](api-retest-evidence/http-retest/server.py) · [Reproduction commands and limits](api-retest-evidence/http-retest/README.md)
 
